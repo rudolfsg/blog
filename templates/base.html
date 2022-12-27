@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+    <title>{{ title }}</title>
+    <!-- <title>{{ title | default(value=1) }} </title> -->
+    <!-- <title>{% if title %}{{ title }}{% else %}1{% endif %}</title> -->
+
+    <style>
+        body,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5 {
+            font-family: "Raleway", sans-serif
+        }
+    </style>
+</head>
+
+<body class="w3-light-grey">
+
+    <header>
+        <h1> my blog name </h1>
+    </header>
+
+    <div id="content">{% block content %}{% endblock %}</div>
+
+
+    <footer>
+        <h1> my footer </h1>
+    </footer>
+
+</body>
+
+</html>

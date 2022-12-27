@@ -1,21 +1,23 @@
 use std::{error::Error};
 use serde::{Serialize, Deserialize};
-use chrono::NaiveDate ;
+use chrono::{NaiveDate, Datelike} ;
 use pulldown_cmark::{html, Options, Parser};
 
+use crate::markdown; 
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct Metadata{
-    title: String, 
-    date: NaiveDate, 
-    slug: String, 
-    tags: Vec<String>,
+    pub title: String, 
+    pub date: NaiveDate, 
+    pub slug: String, 
+    pub tags: Vec<String>,
+}
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct Post {
+    pub metadata: Metadata,
+    pub contents: String, 
 }
 
-pub struct Post {
-    metadata: Metadata,
-    contents: String, 
-}
 
 impl Post {
     pub fn extract_metadata(contents: String) -> Result<(Metadata, String), Box<dyn Error>> {
@@ -23,12 +25,12 @@ impl Post {
             return Err("invalid metadata")?
         }
         let slice = &contents[4..]; 
-        let metadata_end = slice.find("---\n").expect("valid metadata delimiter");
+        let metadata_end = slice.find("---\n").expect("metadata delimiter check");
         let metadata = &slice[..metadata_end];  
         let contents = &slice[metadata_end..]; 
 
         let metadata: Metadata = serde_yaml::from_str(&metadata)?;
-        println!("{:?}", metadata); 
+        // println!("{:?}", metadata); 
         Ok((metadata, contents.to_owned()))
     }
     pub fn from_string(contents: String) -> Result<Post, Box<dyn Error>>  {
@@ -36,7 +38,6 @@ impl Post {
 
         Ok(Post{metadata, contents})
     }
-    pub fn from_path() {}
     pub fn render(&self) -> String {
         // Set up options and parser. Strikethroughs are not part of the CommonMark standard
         // and we therefore must enable it explicitly.
@@ -45,8 +46,7 @@ impl Post {
         let parser = Parser::new_ext(&self.contents, options);
 
         // Write to String buffer.
-        let mut html_output = String::new();
-        html::push_html(&mut html_output, parser);
+        let mut html_output = markdown::parse_markdown(&self.contents);
         html_output
     }
 }

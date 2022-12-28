@@ -9,7 +9,10 @@ use chrono::{Datelike, NaiveDate};
 use katex;
 
 fn parse_equation(text: &String) -> String {
-    if text.starts_with("$$") && text.ends_with("$$") {
+    if text.len() <= 2 {
+        text.clone()
+    }
+    else if text.starts_with("$$") && text.ends_with("$$") {
         if text.len() <= 4 {
             println!("Invalid display mode equation, will skip: {}", text);
             return text.clone();
@@ -23,14 +26,14 @@ fn parse_equation(text: &String) -> String {
         let opts = katex::Opts::builder().display_mode(true).build().unwrap();
         let equation =
             katex::render_with_opts(slice, &opts).expect("rendered display mode equation");
-        return equation;
+        equation
     } else {
         // inline equations
         let matches: Vec<_> = text.match_indices("$").collect();
         let mut indices = Vec::new();
 
         if matches.len() <= 1 {
-            return text.clone()
+            text.clone()
         } else {
             // ignore dollar signs that are escaped
 
@@ -78,7 +81,7 @@ fn parse_equation(text: &String) -> String {
             if previous_index + 1 < text.len() {
                 output.push_str(&text[previous_index + 1..])
             }
-            return output;
+            output
         }
     }
 }
@@ -92,9 +95,14 @@ pub fn parse_markdown(markdown: &String) -> String {
              
                 Tag::Image(link_type, url, title) => {
                     // read images from sibling instead of child folder
-                    let new_url: CowStr = url.replace("images/", "..images/").into();
+                    let new_url: CowStr = url.replace("images/", "/images/").into();
                     Event::Start(Tag::Image(link_type.to_owned(), new_url,title.to_owned() ))
                 },
+                Tag::CodeBlock(block) => {
+                    println!("{:?}", block);
+                    // bloc.
+                    event
+                }
                 _ => event,
             },
             Event::Text(text) => {
@@ -110,7 +118,7 @@ pub fn parse_markdown(markdown: &String) -> String {
                  _ => event,
             }
     );
-           let mut html_output = String::new();
+    let mut html_output = String::new();
     pdc_html::push_html(&mut html_output, parser);
     return html_output
         }

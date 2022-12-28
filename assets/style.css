@@ -1,0 +1,187 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    overflow-y: scroll;
+    height: 100%;
+    font: 100%/1.5 sans-serif;
+    word-wrap: break-word;
+    margin: 0 auto;
+    padding: 1.5em;
+    background-color: #301934;
+    color: #fff3ef;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.post-meta {
+    display: flex;
+    justify-content: space-between;
+    margin: 0.75em 0 -.5em 0;
+}
+
+.title {
+    font-size: 2.5em;
+    font-weight: bold;
+    padding: 0;
+    margin: 0;
+}
+
+
+.post-tag-and-date {
+    text-align: right;
+}
+
+
+.tags {
+    margin: 0;
+    font-weight: bold;
+}
+
+.date {
+    font-weight: bold;
+    margin: 0;
+}
+
+
+@media (min-width: 768px) {
+    html {
+        font-size: 125%;
+        max-width: 42em;
+    }
+}
+
+h1,
+h2,
+h3,
+h4 {
+    margin: 2.5rem 0 1.5rem 0;
+    line-height: 1.25;
+}
+
+a {
+    color: #fa6432;
+    text-decoration: none;
+}
+
+a:hover,
+a:focus,
+a:active {
+    text-decoration: underline;
+}
+
+p {
+    margin: 1em 0;
+    line-height: 1.5;
+}
+
+p code {
+    background-color: #eee;
+    padding: 0.05em 0.2em;
+    border: 1px solid #ccc;
+}
+
+ol,
+ul {
+    margin: 0 2em;
+}
+
+dt {
+    font-weight: bold;
+    margin: 1em 0;
+}
+
+dd {
+    font-weight: bold;
+    margin: -1em 0 1em 1em;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+    margin: 0 auto;
+    padding: 0.5em;
+}
+
+blockquote {
+    padding-left: 1em;
+    font-style: italic;
+    border-left: solid 1px #fa6432;
+}
+
+table {
+    font-size: 1rem;
+    text-align: left;
+    caption-side: bottom;
+    margin-bottom: 2em;
+    margin-left: auto;
+    margin-right: auto;
+
+    max-height: 70vh;
+    /* margin: 1em 0; */
+    padding: 1em;
+    overflow: auto;
+    font-size: 0.85rem;
+    font-family: monospace, monospace;
+    border: 1px dashed rgba(250, 100, 50, 0.5);
+}
+
+table * {
+    border: none;
+}
+
+table thead,
+table tr {
+    display: table;
+    table-layout: auto;
+    width: 100%;
+}
+
+table tr:nth-child(even) {
+    background-color: rgba(200, 200, 200, 0.2);
+}
+
+table tbody {
+    display: block;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+table td,
+table th {
+    /* padding: 0.25em; */
+    padding: 0 2em;
+}
+
+figure {
+    margin: 1em 0;
+}
+
+figure figcaption {
+    font-family: monospace, monospace;
+    font-size: 0.75em;
+    text-align: center;
+    color: grey;
+}
+
+.footnote-definition sup {
+    margin-left: -1.5em;
+    float: left;
+}
+
+.footnote-definition .footnote-body {
+    margin: 1em 0;
+    padding: 0 1em;
+    border: 1px dashed rgba(250, 100, 50, 0.3);
+    background-color: rgba(200, 200, 200, 0.2);
+}
+
+.footnote-definition .footnote-body p:only-child {
+    margin: 0.2em 0;
+}

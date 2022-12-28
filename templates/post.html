@@ -1,8 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>{{ title }}</h1>
-<h5> {{ date }} </h5>
-<h5> {{ tags }} </h5>
+<div class="post-meta">
+<p class="title">{{ title }}</p>
+<div class="post-tag-and-date"> 
+<p class="tags">
+    {% for tag in tags %}
+    <a href="/tags/{{ tag | slugify }}.html">{{ tag }}</a>
+    {% if not loop.last %}
+    |
+    {% endif %}
+    {% endfor %}
+</p>
+<p class="date"> {{ date }} </p>
+</div>
+</div>
 <div> {{ content | safe }}</div>
 {% endblock %}

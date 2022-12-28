@@ -1,6 +1,5 @@
 ---
 title: Dog
-slug: doggo
 date: 2018-12-20
 tags: [Programming, Stuff]
 ---

@@ -2,17 +2,18 @@ use std::{error::Error};
 use serde::{Serialize, Deserialize};
 use chrono::{NaiveDate, Datelike} ;
 use pulldown_cmark::{html, Options, Parser};
+use slug::slugify;
 
 use crate::markdown; 
 
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
 pub struct Metadata{
     pub title: String, 
     pub date: NaiveDate, 
     pub slug: String, 
     pub tags: Vec<String>,
 }
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
 pub struct Post {
     pub metadata: Metadata,
     pub contents: String, 
@@ -29,7 +30,10 @@ impl Post {
         let metadata = &slice[..metadata_end];  
         let contents = &slice[metadata_end..]; 
 
-        let metadata: Metadata = serde_yaml::from_str(&metadata)?;
+        let mut metadata: serde_yaml::Value = serde_yaml::from_str(metadata).unwrap();
+        metadata["slug"] = slugify(metadata["title"].as_str().unwrap()).into();
+
+        let metadata: Metadata = serde_yaml::from_value(metadata)?;
         // println!("{:?}", metadata); 
         Ok((metadata, contents.to_owned()))
     }

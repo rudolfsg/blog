@@ -1,6 +1,5 @@
 ---
 title: math
-slug: math
 date: 2022-12-27
 tags: [Programming, Rust]
 ---

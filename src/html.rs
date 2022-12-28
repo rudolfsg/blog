@@ -19,24 +19,36 @@ lazy_static! {
     };
 }
 
-pub fn create_index(posts: &mut Vec<Post>) -> String {
-    posts.sort_by_key(|p| p.metadata.date);
-    posts.reverse();
-    let mut index_content = "".to_string();
+pub fn create_index(posts: & Vec<Post>) -> String {
+    // posts.sort_by_key(|p| p.metadata.date).reverse().into_iter();
+    // posts.reverse();
+    
+    let mut index_content = "<dl>".to_string();
     for (year, year_posts) in posts
         .iter()
+        .sorted_by_key(|p| p.metadata.date).rev()
         .group_by(|x| x.metadata.date.year().to_string())
         .into_iter()
     {
-        index_content.push_str(&format!("<h3> {} </h3> <ul>", year));
+        // index_content.push_str(&format!("<h3> {} </h3> <ul>", year));
+        // for post in year_posts {
+        //     let link = format!(
+        //         r##"<li><a href="/posts/{}.html">{}</a></li>"##,
+        //         post.metadata.slug, post.metadata.title
+        //     );
+        //     index_content.push_str(&link);
+        // }
+        // index_content.push_str("</ul>")
+         index_content.push_str(&format!("<dt> {} </dt> ", year));
         for post in year_posts {
             let link = format!(
-                r##"<li><a href="posts/{}.html">{}</a></li>"##,
+                r##"<dd><a href="/posts/{}.html">{}</a></dd>"##,
                 post.metadata.slug, post.metadata.title
             );
             index_content.push_str(&link);
         }
-        index_content.push_str("</ul>")
+        // index_content.push_str("</ul>")
     }
+    index_content.push_str("</dl>"); 
     index_content
 }

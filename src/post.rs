@@ -42,7 +42,7 @@ impl Post {
 
         Ok(Post{metadata, contents})
     }
-    pub fn render(&self) -> String {
+    pub fn render(&self) -> (String, bool) {
         // Set up options and parser. Strikethroughs are not part of the CommonMark standard
         // and we therefore must enable it explicitly.
         let mut options = Options::empty();
@@ -50,7 +50,7 @@ impl Post {
         let parser = Parser::new_ext(&self.contents, options);
 
         // Write to String buffer.
-        let mut html_output = markdown::parse_markdown(&self.contents);
-        html_output
+        let (mut html_output, has_katex) = markdown::parse_markdown(&self.contents);
+        (html_output, has_katex)
     }
 }

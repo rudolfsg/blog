@@ -19,13 +19,13 @@ lazy_static! {
     static ref SYNTAX_SET: SyntaxSet = SyntaxSet::load_defaults_newlines();
 }
 
-fn parse_equation(text: &String) -> String {
+fn parse_equation(text: &String) -> (String, bool) {
     if text.len() <= 2 {
-        text.clone()
+        (text.clone(), false)
     } else if text.starts_with("$$") && text.ends_with("$$") {
         if text.len() <= 4 {
             println!("Invalid display mode equation, will skip: {}", text);
-            return text.clone();
+            return (text.clone(), false);
         }
         // display mode equations
         let slice = &text[2..text.len() - 2];
@@ -36,14 +36,14 @@ fn parse_equation(text: &String) -> String {
         let opts = katex::Opts::builder().display_mode(true).build().unwrap();
         let equation =
             katex::render_with_opts(slice, &opts).expect("rendered display mode equation");
-        equation
+        (equation, true)
     } else {
         // inline equations
         let matches: Vec<_> = text.match_indices("$").collect();
         let mut indices = Vec::new();
 
         if matches.len() <= 1 {
-            text.clone()
+            return (text.clone(), false);
         } else {
             // ignore dollar signs that are escaped
 
@@ -91,13 +91,12 @@ fn parse_equation(text: &String) -> String {
             if previous_index + 1 < text.len() {
                 output.push_str(&text[previous_index + 1..])
             }
-            output
+            (output, true)
         }
     }
 }
 
 fn highlight_code(code: &String, language: Option<String>) -> String {
-
     let syntax = match language {
         Some(s) => SYNTAX_SET.find_syntax_by_token(&s),
         None => None,
@@ -116,15 +115,20 @@ fn highlight_code(code: &String, language: Option<String>) -> String {
             }
         },
     };
-    let html =
-        highlighted_html_for_string(&code, &SYNTAX_SET, syntax, &THEME_SET.themes["base16-eighties.dark"]).expect("parsed codeblock");
-    
-        // drop the included background color 
-    let start = html.find('>').expect("background color style") + 1; 
-    let end = html.find("</pre>").expect("background color style"); 
+    let html = highlighted_html_for_string(
+        &code,
+        &SYNTAX_SET,
+        syntax,
+        &THEME_SET.themes["base16-eighties.dark"],
+    )
+    .expect("parsed codeblock");
+
+    // drop the included background color
+    let start = html.find('>').expect("background color style") + 1;
+    let end = html.find("</pre>").expect("background color style");
     let html = &html[start..end].trim();
-    let html = format!(r##"<pre><code class="code-block">{}</code></pre>"##, html); 
-    return html
+    let html = format!(r##"<pre><code class="code-block">{}</code></pre>"##, html);
+    return html;
 }
 
 #[derive(Eq, PartialEq, Debug)]
@@ -134,10 +138,11 @@ enum MultiLineType {
     None,
 }
 
-pub fn parse_markdown(markdown: &String) -> String {
+pub fn parse_markdown(markdown: &String) -> (String, bool) {
     let mut events = Vec::new();
     let mut multiline_type = MultiLineType::None;
     let mut buffer = String::new();
+    let mut has_katex = false;
 
     for event in Parser::new_ext(markdown, Options::all()) {
         match event {
@@ -157,7 +162,7 @@ pub fn parse_markdown(markdown: &String) -> String {
                     CodeBlockKind::Fenced(lang) => Some(lang.to_string()),
                     CodeBlockKind::Indented => None,
                 };
-                let html = highlight_code(&buffer, language); 
+                let html = highlight_code(&buffer, language);
                 events.push(Event::Html(CowStr::from(html)));
                 multiline_type = MultiLineType::None;
             }
@@ -169,9 +174,12 @@ pub fn parse_markdown(markdown: &String) -> String {
 
                     if text.trim() == "$$" {
                         // end of multiline equation
-                        let equation = parse_equation(&buffer);
+                        let (equation, flag) = parse_equation(&buffer);
                         events.push(Event::Html(equation.into()));
                         multiline_type = MultiLineType::None;
+                        if flag {
+                            has_katex = true
+                        };
                     }
                 }
                 MultiLineType::None => {
@@ -183,18 +191,21 @@ pub fn parse_markdown(markdown: &String) -> String {
                         multiline_type = MultiLineType::DisplayModeMath;
                         buffer.push_str(&text);
                     } else {
-                        let equation = parse_equation(&text.trim().to_string());
+                        let (equation, flag) = parse_equation(&text.trim().to_string());
                         events.push(Event::Html(equation.into()));
+                        if flag {
+                            has_katex = true
+                        };
                     }
                 }
             },
             Event::Code(s) => {
                 // inline code
                 // synectic fails to find from first line so kinda useless now
-                // let html = highlight_code(&s.to_string(), None); 
+                // let html = highlight_code(&s.to_string(), None);
                 // events.push(Event::Html(CowStr::from(html)));
                 events.push(Event::Code(s))
-            },
+            }
             _ => {
                 // println!("{:?}", event);
                 events.push(event);
@@ -212,42 +223,5 @@ pub fn parse_markdown(markdown: &String) -> String {
 
     let mut html_output = String::new();
     pdc_html::push_html(&mut html_output, events.into_iter());
-    return html_output;
+    return (html_output, has_katex);
 }
-
-// pub fn parse_markdown(markdown: &String) -> String {
-
-//     let parser = Parser::new_ext(markdown, Options::all()).map(|event|
-//         // {
-//         match &event {
-//             Event::Start(tag) => match tag {
-
-//                 Tag::Image(link_type, url, title) => {
-//                     // read images from sibling instead of child folder
-//                     let new_url: CowStr = url.replace("images/", "/images/").into();
-//                     Event::Start(Tag::Image(link_type.to_owned(), new_url,title.to_owned() ))
-//                 },
-//                 Tag::CodeBlock(block) => {
-//                     println!("{:?}", block);
-//                     // bloc.
-//                     event
-//                 }
-//                 _ => event,
-//             },
-//             Event::Text(text) => {
-//                 if !text.contains('$') {
-//                     return event
-//                 }
-//                 else{
-//                     let equation = parse_equation(&text.to_string());
-//                     return Event::Html(equation.into())
-//                 }
-
-//                 }
-//                  _ => event,
-//             }
-//     );
-//     let mut html_output = String::new();
-//     pdc_html::push_html(&mut html_output, parser);
-//     return html_output
-// }

@@ -68,11 +68,12 @@ fn main() {
 
         let post = Post::from_string(markdown_input).unwrap();
 
-        let output = post.render();
+        let (output, has_katex) = post.render();
 
         let mut context = Context::new();
         context.insert("title", &post.metadata.title);
         context.insert("content", &output);
+        context.insert("has_katex", &has_katex);
         context.insert("date", &post.metadata.date);
         context.insert("tags", &post.metadata.tags);
         let output = html::TEMPLATES
@@ -107,7 +108,7 @@ fn main() {
         .expect("about rendering");
     let path = PathBuf::from("build/about.html");
     std::fs::write(path, output).expect("about html writing");
-    
+
     // create tag indices
     let mut unique_tags: HashMap<&str, Vec<Post>> = HashMap::new();
     for post in &posts{

@@ -60,6 +60,8 @@ for i in range(10):
     print(i)
 
 print("The mean is {mean:.2f}")
+
+assert mean != 0
 ```
 
 

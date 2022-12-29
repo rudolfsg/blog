@@ -1,3 +1,10 @@
+ @font-face {
+     font-family: 'Jetbrains Mono';
+     src: url('/JetBrainsMono-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-display: swap;
+ }
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -68,6 +75,8 @@ h3 > tr {
     margin: 0;
 }
 
+
+
 /* inline code */
 p > code {
     /* background-color: #181825; */
@@ -81,7 +90,6 @@ pre {
     margin-bottom: .5em;
     background-color: #301934;
 
-        font-family: monospace, monospace;
     max-height: 70vh;
         /* margin: 1em 0; */
         padding: 1em;
@@ -93,6 +101,10 @@ pre {
         /* display: table;
     margin-left: auto;
     margin-right: auto; */
+}
+
+code {
+    font-family: Jetbrains Mono, monospace;
 }
 
 

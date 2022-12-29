@@ -6,7 +6,15 @@ tags: [Programming, Rust]
 
 Hello there!
 
+Add as many parwritingagraphs as you like.
+I like writingwriting very long writingparagraphs.
+I like writing vwritingery long paragraphs.
+I like writing very long paragraphs.I like writing vwritingery long paragraphs.I like writing very lwritingong paragraphs.I like writing very long paragraphs.writingI like writing very long paragraphs.I like wrwritingiting very long paragraphs.I like writing very long paragraphs.I like writing very long paragraphs.I like writing very long paragraphs.I like writing very long pwritingaragraphs.I like writing very long paragraphs.I like writing very long paragraphs.
+
+
 I like `variables`. Also some code `let mut y = 10`. 
+
+The `cd` command or `x`.
 
 He once said 
 > He who is good
@@ -84,7 +92,12 @@ enum MultiLineType {
 
 Images, interactive graphics, svg?
 
-![A good doggo? Time will tell](images/PXL_20220814_144025581%20Large.jpeg){ width=50%}
+![](images/no_caption.png)
+
+![nice chart](images/jensen_exp.png){width=50%}
+
+
+![A good doggo? Time will tell](images/dog.jpeg){ width=50%}
 
 ### Footnotes
 
@@ -98,3 +111,8 @@ ___
     Indent paragraphs to include them in the footnote.
     `let mut x = 5;`
     Add as many paragraphs as you like.
+    I like writing very long paragraphs.
+    I like writing very long paragraphs.
+    I like writing very long paragraphs.I like writing very long paragraphs.I like writing very long paragraphs.I like writing very long paragraphs.I like writing very long paragraphs.I like writing very long paragraphs.I like writing very long paragraphs.I like writing very long paragraphs.I like writing very long paragraphs.I like writing very long paragraphs.I like writing very long paragraphs.I like writing very long paragraphs.
+
+[^n]: This is the nth footnote.

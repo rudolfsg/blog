@@ -8,29 +8,23 @@ use tera::{Context, Tera};
 use std::path::{Path, PathBuf};
 use std::collections::HashMap;
 use slug::slugify;
+use fs_extra::dir::get_size;
 
 
 mod post;
 mod markdown; 
 mod html;
-use post::Post;
+mod build; 
 
+use post::Post;
 // TODO:
-// posts in correct date order
 // process html in parallel
 // figures for images - resizing?
-// use https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dl for index
+// fig captions
+// consider SASS instead of plain CSS for nesting, variable defs etc
+// light theme toggle
 
 
-fn create_folder(path: &str) {
-    match fs::create_dir(path) {
-        Ok(_) => (),
-        Err(err) => match err.kind() {
-            io::ErrorKind::AlreadyExists => (),
-            _ => panic!("Could not create folder {}", path),
-        },
-    }
-}
 
 
 fn main() {
@@ -38,17 +32,14 @@ fn main() {
     use std::time::Instant;
     let time = Instant::now();
 
-    create_folder("build");
-    create_folder("build/images");
-    create_folder("build/posts");
-    create_folder("build/tags");
+    const BLOG_NAME: &str = "My Blog";
+    const CLEAN_BUILD: bool = true; 
 
+    build::init_build(CLEAN_BUILD); 
 
     // build posts
     let markdown_files = fs::read_dir("posts").unwrap();
     let mut posts: Vec<Post> = Vec::new();
-
-    const BLOG_NAME: &str = "My Blog";
 
     for file in markdown_files {
         let file_path = file.unwrap().path();
@@ -76,13 +67,8 @@ fn main() {
         context.insert("has_katex", &has_katex);
         context.insert("date", &post.metadata.date);
         context.insert("tags", &post.metadata.tags);
-        let output = html::TEMPLATES
-            .render("post.html", &context)
-            .expect("post rendering");
 
-        let path = format!("build/posts/{}.html", &post.metadata.slug);
-        let path = PathBuf::from(path);
-        std::fs::write(path, output).expect("post html writing");
+        build::build_html(&post.metadata.slug, "post.html", "/posts/", context);
 
         posts.push(post);
 
@@ -92,22 +78,12 @@ fn main() {
     let mut context = Context::new();
     context.insert("content", &index_content);
     context.insert("title", &BLOG_NAME);
-    let output = html::TEMPLATES
-        .render("index.html", &context)
-        .expect("index rendering");
-
-    let path = PathBuf::from("build/index.html");
-    std::fs::write(path, output).expect("index html writing");
+    build::build_html("index", "index.html", "/", context);
 
     // about
     let mut context = Context::new();
     context.insert("title", &BLOG_NAME);
-
-    let output = html::TEMPLATES
-        .render("about.html", &context)
-        .expect("about rendering");
-    let path = PathBuf::from("build/about.html");
-    std::fs::write(path, output).expect("about html writing");
+    build::build_html("about", "about.html", "/", context);
 
     // create tag indices
     let mut unique_tags: HashMap<&str, Vec<Post>> = HashMap::new();
@@ -131,11 +107,7 @@ fn main() {
         context.insert("content", &index_content);
         context.insert("title", &tag);
         context.insert("index_title", &tag);
-        let output = html::TEMPLATES
-            .render("index.html", &context)
-            .expect("tag index rendering");
-        let path = PathBuf::from(format!("build/tags/{}.html", slugify(tag)));
-        std::fs::write(path, output).expect("index html writing");
+        build::build_html(&slugify(tag), "index.html", "/tags/", context);
 
         all_tags.push(tag);
 
@@ -146,41 +118,15 @@ fn main() {
     let mut context = Context::new();
         context.insert("tags", &all_tags);
         context.insert("title", "All tags");
-        let output = html::TEMPLATES
-            .render("all-tags.html", &context)
-            .expect("tag index rendering");
-
-        let path = PathBuf::from("build/tags/all-tags.html");
-        std::fs::write(path, output).expect("index html writing");
+        build::build_html("all-tags", "all-tags.html", "/tags/", context);
  
 
-    // copy images
-    let images = fs::read_dir("posts/images").unwrap();
-    for file in images {
-        let file_path = file.unwrap().path();
-        let file_name = file_path.file_name().unwrap().to_str().unwrap();
-        if file_name.starts_with(".") || file_path.is_dir() {
-            continue;
-        }
-
-        let dest = PathBuf::from(format!("build/images/{}", file_name));
-        fs::copy(file_path, dest).expect("copy image");
-    }
-
-    // copy assets
-    let images = fs::read_dir("assets").unwrap();
-    for file in images {
-        let file_path = file.unwrap().path();
-        let file_name = file_path.file_name().unwrap().to_str().unwrap();
-        if file_name.starts_with(".") || file_path.is_dir() {
-            continue;
-        }
-
-        let dest = PathBuf::from(format!("build/{}", file_name));
-        fs::copy(file_path, dest).expect("copy asset");
-    }
+    build::move_assets();
 
     let elapsed = time.elapsed();
     println!("Done in: {:.2?}", elapsed);
+
+    let folder_size = get_size(build::BUILD_DIR).unwrap() / 1024;
+    println!("Build size: {}KB", folder_size); // print directory sile in bytes
   
 }

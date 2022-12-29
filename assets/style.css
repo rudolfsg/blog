@@ -70,7 +70,8 @@ footer > h1 > a {
 }
 
 /* footnotes line  */
-h3 > tr {
+h3 > hr,
+h3 > th {
     padding: 0;
     margin: 0;
 }
@@ -123,6 +124,11 @@ h4 {
     line-height: 1.25;
 }
 
+h3 {
+    /* used for footnotes  */
+    margin: 2.5rem 0 0 0;
+}
+
 a {
     color: #fa6432;
     text-decoration: none;
@@ -156,6 +162,7 @@ dd {
 
 img {
     max-width: 100%;
+    height: auto;
     display: block;
     margin: 0 auto;
     padding: 0.5em;
@@ -216,10 +223,16 @@ figure {
 }
 
 figure figcaption {
-    font-family: monospace, monospace;
+    /* font-family: Jetbrains Mono, monospace; */
     font-size: 0.75em;
     text-align: center;
-    color: grey;
+    border: 1px dashed rgba(250, 100, 50, 0.5);
+
+            display: table; 
+                margin-left: auto;
+                margin-right: auto;
+                padding: .5em 1em .5em 1em; 
+
 }
 
 .footnote-definition sup {

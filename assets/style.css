@@ -18,6 +18,11 @@ html {
 header {
     display: flex;
     justify-content: space-between;
+        
+}
+
+.heading > a  {
+    color: #fff3ef;
 }
 
 .post-meta {
@@ -47,6 +52,47 @@ header {
 .date {
     font-weight: bold;
     margin: 0;
+}
+
+footer { 
+    float: right;
+}
+
+footer > h1 > a {
+    color: #fff3ef;
+}
+
+/* footnotes line  */
+h3 > tr {
+    padding: 0;
+    margin: 0;
+}
+
+/* inline code */
+p > code {
+    /* background-color: #181825; */
+    padding: 0.05em 0.2em;
+    border: 1px dashed rgba(250, 100, 50, 0.5);
+}
+
+/* code block  */
+pre {
+    border: 1px dashed rgba(250, 100, 50, 0.5);
+    margin-bottom: .5em;
+    background-color: #301934;
+
+        font-family: monospace, monospace;
+    max-height: 70vh;
+        /* margin: 1em 0; */
+        padding: 1em;
+        overflow: auto;
+        font-size: 0.85rem;
+        white-space: pre-wrap;
+
+    /* enable for centered code */
+        /* display: table;
+    margin-left: auto;
+    margin-right: auto; */
 }
 
 
@@ -79,12 +125,6 @@ a:active {
 p {
     margin: 1em 0;
     line-height: 1.5;
-}
-
-p code {
-    background-color: #eee;
-    padding: 0.05em 0.2em;
-    border: 1px solid #ccc;
 }
 
 ol,

@@ -98,6 +98,16 @@ fn main() {
     let path = PathBuf::from("build/index.html");
     std::fs::write(path, output).expect("index html writing");
 
+    // about
+    let mut context = Context::new();
+    context.insert("title", &BLOG_NAME);
+
+    let output = html::TEMPLATES
+        .render("about.html", &context)
+        .expect("about rendering");
+    let path = PathBuf::from("build/about.html");
+    std::fs::write(path, output).expect("about html writing");
+    
     // create tag indices
     let mut unique_tags: HashMap<&str, Vec<Post>> = HashMap::new();
     for post in &posts{
@@ -136,10 +146,10 @@ fn main() {
         context.insert("tags", &all_tags);
         context.insert("title", "All tags");
         let output = html::TEMPLATES
-            .render("all_tags.html", &context)
+            .render("all-tags.html", &context)
             .expect("tag index rendering");
 
-        let path = PathBuf::from("build/tags/all_tags.html");
+        let path = PathBuf::from("build/tags/all-tags.html");
         std::fs::write(path, output).expect("index html writing");
  
 

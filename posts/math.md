@@ -25,4 +25,10 @@ $$
 = \pi
 $$
 
+And
+
+$$
+\int^\infty (x+5) dx = \text{A lot!}
+$$
+
 

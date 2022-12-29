@@ -6,7 +6,7 @@ tags: [Programming, Rust]
 
 Hello there!
 
-I like `variables`.
+I like `variables`. Also some code `let mut y = 10`. 
 
 He once said 
 > He who is good
@@ -43,15 +43,6 @@ Nice, huh?
 
 Here's a simple footnote,[^1] and here's a longer one.[^bignote]
 
-[^1]: This is the first footnote.
-
-[^bignote]: Here's one with multiple paragraphs and code.
-
-    Indent paragraphs to include them in the footnote.
-
-    `{ my code }`
-
-    Add as many paragraphs as you like.
 
 ## Code
 
@@ -64,7 +55,21 @@ data = pd.Series([
 ])
 
 mean = data.mean()
+
+for i in range(10):
+    print(i)
+
 print("The mean is {mean:.2f}")
+```
+
+
+```rust
+#[derive(Eq, PartialEq, Debug)]
+enum MultiLineType {
+    CodeBlock,
+    DisplayModeMath,
+    None,
+}
 ```
 
 ## TODO
@@ -79,3 +84,15 @@ Images, interactive graphics, svg?
 
 ![A good doggo? Time will tell](images/PXL_20220814_144025581%20Large.jpeg){ width=50%}
 
+### Footnotes
+
+___
+
+
+[^1]: This is the first footnote.
+
+
+[^bignote]: Here's one with multiple paragraphs and code.
+    Indent paragraphs to include them in the footnote.
+    `let mut x = 5;`
+    Add as many paragraphs as you like.

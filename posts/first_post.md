@@ -4,12 +4,11 @@ date: 2022-12-27
 tags: [Programming, Rust]
 ---
 
-Hello there!
+Hello there!? Is "this" you_ ,.;
 
-Add as many parwritingagraphs as you like.
-I like writingwriting very long writingparagraphs.
-I like writing vwritingery long paragraphs.
-I like writing very long paragraphs.I like writing vwritingery long paragraphs.I like writing very lwritingong paragraphs.I like writing very long paragraphs.writingI like writing very long paragraphs.I like wrwritingiting very long paragraphs.I like writing very long paragraphs.I like writing very long paragraphs.I like writing very long paragraphs.I like writing very long pwritingaragraphs.I like writing very long paragraphs.I like writing very long paragraphs.
+The most important feature distinguishing reinforcement learning from other types of learning is that it uses training information that _evaluates the actions_ taken rather than instructs by giving correct actions. This is what creates the need for active exploration, for an explicit search for good behavior. Purely evaluative feedback indicates how good the action taken was, but not whether it was the best or the worst action possible. 
+
+Purely instructive feedback, on the other hand, indicates the correct action to take, independently of the action actually taken. This kind of feedback is the basis of **supervised learning**, which includes large parts of pattern classification, artificial neural networks, and system identification. In their pure forms, these two kinds of feedback are quite distinct: evaluative feedback depends entirely on the action taken, whereas instructive feedback is independent of the action taken.
 
 
 I like `variables`. Also some code `let mut y = 10`. 
@@ -17,10 +16,7 @@ I like `variables`. Also some code `let mut y = 10`.
 The `cd` command or `x`.
 
 He once said 
-> He who is good
-> Shall be
-> > nested
-> In safety?
+> This is a longer quote. Might be good for an aside. This is a longer quote. Might be good for an aside.This is a longer quote. Might be good for an aside.This is a longer quote. Might be good for an aside.This is a longer quote. Might be good for an aside.This is a longer quote. Might be good for an aside.
 
 He is a **bold** _Italian_ dog - of course he uses [Duck Duck Go](https://duckduckgo.com). And not only that:
 
@@ -74,6 +70,8 @@ assert mean != 0
 
 
 ```rust
+use crate::post::Post;
+
 #[derive(Eq, PartialEq, Debug)]
 enum MultiLineType {
     CodeBlock,
@@ -92,9 +90,8 @@ enum MultiLineType {
 
 Images, interactive graphics, svg?
 
-![](images/no_caption.png)
 
-![nice chart](images/jensen_exp.png){width=50%}
+![](images/jensen_exp.png)
 
 
 ![A good doggo? Time will tell](images/dog.jpeg){ width=50%}

@@ -1,9 +1,22 @@
+ /* https: //www.fontshare.com */
+ /* https: //wakamaifondue.com/ */
+ /* https: //markoskon.com/creating-font-subsets/ */
+ 
  @font-face {
      font-family: 'Jetbrains Mono';
      src: url('/JetBrainsMono-Regular.woff2') format('woff2');
     font-weight: 400;
     font-display: swap;
  }
+
+@font-face {
+    font-family: 'Satoshi-Variable';
+    src: url('/Satoshi-Variable.woff2') format('woff2');
+    font-weight: 300 900;
+    font-display: swap;
+    font-style: normal;
+}
+
 
 * {
     box-sizing: border-box;
@@ -14,12 +27,26 @@
 html {
     overflow-y: scroll;
     height: 100%;
-    font: 100%/1.5 sans-serif;
+    /* font-family: system-ui; */
+    font-family: Satoshi-Variable, sans-serif;
+    font-family: Satoshi-Regular, sans-serif;
+    
+    font-size: 100%;
+    line-height: 1.5;
     word-wrap: break-word;
     margin: 0 auto;
     padding: 1.5em;
     background-color: #301934;
     color: #fff3ef;
+}
+
+p {
+    margin: 1em 0;
+    line-height: 1.5;
+}
+
+strong {
+    font-weight: 700;
 }
 
 header {
@@ -30,6 +57,20 @@ header {
 
 .heading > a  {
     color: #fff3ef;
+    /* font-family: serif; */
+    font-size: 2em;
+    
+}
+
+.heading > a:hover,
+.heading>a:focus,
+.heading>a:active {
+    text-decoration: none;
+}
+
+.heading {
+    padding: 0;
+    margin: 0;
 }
 
 .post-meta {
@@ -140,10 +181,7 @@ a:active {
     text-decoration: underline;
 }
 
-p {
-    margin: 1em 0;
-    line-height: 1.5;
-}
+
 
 ol,
 ul {

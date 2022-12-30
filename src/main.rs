@@ -15,6 +15,7 @@ mod post;
 mod markdown; 
 mod html;
 mod build; 
+mod image_convert;
 
 use post::Post;
 // TODO:
@@ -29,6 +30,9 @@ use post::Post;
 
 fn main() {
 
+
+    // image_convert::test_image();
+    // panic!();
     use std::time::Instant;
     let time = Instant::now();
 

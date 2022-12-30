@@ -15,6 +15,7 @@ use crate::html;
 pub struct EventIterator<'a, I: Iterator<Item = Event<'a>>> {
     parser: MultiPeek<I>,
     has_katex: bool,
+    image_dims: Vec<(usize, usize)>,
 }
 
 impl<'a, I: Iterator<Item = Event<'a>>> EventIterator<'a, I> {
@@ -22,6 +23,7 @@ impl<'a, I: Iterator<Item = Event<'a>>> EventIterator<'a, I> {
         Self {
             parser: parser.multipeek(),
             has_katex: false,
+            image_dims: Vec::new(),
         }
     }
 
@@ -46,18 +48,6 @@ impl<'a, I: Iterator<Item = Event<'a>>> Iterator for EventIterator<'a, I> {
                     };
                     // end of figure
                     self.parser.next();
-
-                    //  let next = self.parser.peek().unwrap();
-                    // println!("next event: {:?}", next);
-
-                    // let next = self.parser.peek().unwrap();
-                    // println!("after ext event: {:?}", next);
-
-                    // let next = self.parser.peek().unwrap();
-                    // println!("after after ext event: {:?}", next);
-
-                    // let next = self.parser.peek().unwrap();
-                    // println!("after after ext event: {:?}", next);
 
                     // extract width=x%.
                     let width = match &self.parser.peek() {

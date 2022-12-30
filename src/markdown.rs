@@ -1,5 +1,7 @@
 use chrono::format::format;
 use itertools::{Itertools, MultiPeek};
+use std::collections::HashMap;
+use std::path::PathBuf;
 use lazy_static::lazy_static;
 use pulldown_cmark::{
     html as pdc_html, CodeBlockKind, CowStr, Event, LinkType, Options, Parser, Tag,
@@ -11,11 +13,12 @@ use chrono::{Datelike, NaiveDate};
 use katex;
 
 use crate::html;
+use crate::image_convert;
 
 pub struct EventIterator<'a, I: Iterator<Item = Event<'a>>> {
     parser: MultiPeek<I>,
     has_katex: bool,
-    image_dims: Vec<(usize, usize)>,
+    image_scale: HashMap<String, f64>,
 }
 
 impl<'a, I: Iterator<Item = Event<'a>>> EventIterator<'a, I> {
@@ -23,12 +26,16 @@ impl<'a, I: Iterator<Item = Event<'a>>> EventIterator<'a, I> {
         Self {
             parser: parser.multipeek(),
             has_katex: false,
-            image_dims: Vec::new(),
+            image_scale: HashMap::new(),
         }
     }
 
     pub fn enable_katex(&mut self) {
         self.has_katex = true;
+    }
+
+    pub fn add_image(&mut self, url: String, scaling: f64) {
+        self.image_scale.insert(url, scaling);
     }
 }
 
@@ -40,25 +47,34 @@ impl<'a, I: Iterator<Item = Event<'a>>> Iterator for EventIterator<'a, I> {
             match event {
                 // images + figures
                 Event::Start(Tag::Image(link_type, url, title)) => {
-                    println!("{link_type:?} - {url} - {title}");
-                    let new_url: String = url.replace("images/", "/images/");
+                    
                     let caption = match &self.parser.next() {
-                        Some(Event::Text(t)) => Some(t.to_owned().to_string()),
+                        Some(Event::Text(t)) => {
+                            self.parser.next();
+                            Some(t.to_owned().to_string())
+                        },
                         _ => None,
                     };
                     // end of figure
-                    self.parser.next();
+                    // self.parser.next();
 
                     // extract width=x%.
-                    let width = match &self.parser.peek() {
+                    let scaling = match &self.parser.peek() {
                         Some(Event::Text(t)) => {
                             let s = t.replace(' ', "");
                             let pattern = "width=";
                             if s.starts_with('{') && s.ends_with('}') && s.contains(pattern) {
-                                let s = &s[1..s.len() - 1];
-                                let s = &s[pattern.len()..];
+                                let start = s.find('=').expect("width specified with =") + 1;
+                                let end = s.find('%').expect("width specified with %");
+                                let s = &s[start..end];
+                                let scaling: usize = s.parse().expect("number conversion");
+                                let scaling = (scaling as f64) / 100.0;
                                 self.parser.next();
-                                Some(s.to_string())
+
+                                let key = PathBuf::from(url.to_string()).file_name().unwrap().to_str().unwrap().to_string(); 
+                                self.add_image(key, scaling);
+
+                                Some(scaling)
                             } else {
                                 None
                             }
@@ -66,7 +82,7 @@ impl<'a, I: Iterator<Item = Event<'a>>> Iterator for EventIterator<'a, I> {
                         _ => None,
                     };
 
-                    let html = html::create_figure(new_url, caption, width);
+                    let html = html::create_figure(url.clone().to_string(), caption, scaling);
 
                     return Some(Event::Html(html.into()));
                 }
@@ -131,13 +147,16 @@ impl<'a, I: Iterator<Item = Event<'a>>> Iterator for EventIterator<'a, I> {
     }
 }
 
-pub fn parse_markdown(markdown: &String) -> (String, bool) {
+pub fn parse_markdown(markdown: &String) -> (String, bool, HashMap<String, f64>) {
     let parser = Parser::new_ext(markdown, Options::all());
     let mut iterator = EventIterator::new(parser);
     let mut html = String::new();
+
     pdc_html::push_html(&mut html, &mut iterator);
     let has_katex = iterator.has_katex;
-    (html, has_katex)
+    let image_scale = iterator.image_scale.clone();
+
+    (html, has_katex, image_scale)
 }
 
 // #[derive(Eq, PartialEq, Debug)]

@@ -32,4 +32,3 @@ $$
 $$
 
 
-![](images/jensen_exp.png){width=50%}

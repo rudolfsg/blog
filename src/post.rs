@@ -1,4 +1,4 @@
-use std::{error::Error};
+use std::{error::Error, collections::HashMap};
 use serde::{Serialize, Deserialize};
 use chrono::{NaiveDate, Datelike} ;
 use pulldown_cmark::{html, Options, Parser};
@@ -42,7 +42,7 @@ impl Post {
 
         Ok(Post{metadata, contents})
     }
-    pub fn render(&self) -> (String, bool) {
+    pub fn render(&self) -> (String, bool, HashMap<String, f64>) {
         // Set up options and parser. Strikethroughs are not part of the CommonMark standard
         // and we therefore must enable it explicitly.
         let mut options = Options::empty();
@@ -50,7 +50,6 @@ impl Post {
         let parser = Parser::new_ext(&self.contents, options);
 
         // Write to String buffer.
-        let (mut html_output, has_katex) = markdown::parse_markdown(&self.contents);
-        (html_output, has_katex)
+        markdown::parse_markdown(&self.contents)
     }
 }

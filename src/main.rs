@@ -21,10 +21,9 @@ use post::Post;
 // TODO:
 // process html in parallel
 // figures for images - resizing?
-// fig captions
 // consider SASS instead of plain CSS for nesting, variable defs etc
 // light theme toggle
-
+// .html at end oflink - need to folderise?
 
 
 
@@ -44,6 +43,8 @@ fn main() {
     // build posts
     let markdown_files = fs::read_dir("posts").unwrap();
     let mut posts: Vec<Post> = Vec::new();
+    // todo: merge all scales after for loop
+    let mut image_scale : HashMap<String, f64> = HashMap::new();
 
     for file in markdown_files {
         let file_path = file.unwrap().path();
@@ -63,7 +64,10 @@ fn main() {
 
         let post = Post::from_string(markdown_input).unwrap();
 
-        let (output, has_katex) = post.render();
+        let (output, has_katex, post_image_scale) = post.render();
+
+        // might be duplicated - warn user
+        image_scale.extend(post_image_scale);
 
         let mut context = Context::new();
         context.insert("title", &post.metadata.title);
@@ -77,6 +81,7 @@ fn main() {
         posts.push(post);
 
     }
+    println!("Image scales: {:?}", image_scale);
     // create index.html
     let index_content = html::create_index(& posts);
     let mut context = Context::new();
@@ -125,7 +130,9 @@ fn main() {
         build::build_html("all-tags", "all-tags.html", "/tags/", context);
  
 
-    build::move_assets();
+    build::copy_assets("assets", "/");
+    build::process_images("posts/images","/images/" , image_scale);
+
 
     let elapsed = time.elapsed();
     println!("Done in: {:.2?}", elapsed);

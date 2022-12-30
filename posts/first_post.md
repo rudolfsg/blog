@@ -91,8 +91,9 @@ enum MultiLineType {
 Images, interactive graphics, svg?
 
 
-![](images/jensen_exp.png)
+![](images/jensen_exp.png){width=70%}
 
+hmm
 
 ![A good doggo? Time will tell](images/dog.jpeg){ width=50%}
 

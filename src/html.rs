@@ -1,9 +1,9 @@
-
-use tera::{Context, Tera};
-use lazy_static::lazy_static;
+use crate::image_convert;
 use crate::post::Post;
-use itertools::Itertools;
 use chrono::{Datelike, NaiveDate};
+use itertools::Itertools;
+use lazy_static::lazy_static;
+use tera::{Context, Tera};
 
 use syntect::highlighting::ThemeSet;
 use syntect::html::highlighted_html_for_string;
@@ -21,40 +21,63 @@ lazy_static! {
         tera.autoescape_on(vec![".html"]);
         tera
     };
-
-      static ref THEME_SET: ThemeSet = ThemeSet::load_defaults();
+    static ref THEME_SET: ThemeSet = ThemeSet::load_defaults();
     static ref SYNTAX_SET: SyntaxSet = SyntaxSet::load_defaults_newlines();
-
 }
 
-
-pub fn create_figure(url: String, caption:Option<String>, width: Option<String>) -> String {
-    let caption_html = match caption {
-        Some(s) => format!("<figcaption>{}</figcaption>", s),
-        None => "".to_string()
+pub fn create_figure(
+    url: String,
+    caption: Option<String>,
+    scaling: Option<f64>,
+) -> String {
+    let (caption_html, alt_text) = match caption {
+        Some(s) => (format!("<figcaption>{}</figcaption>", s), s),
+        None => ("".to_string(), "No description".to_string()),
     };
-    let width = match width {
-        Some(s) => format!("width={s}"),
-        None => "".to_string()
+
+    let scaling = match scaling {
+        Some(v) => v,
+        None => 1.0,
     };
 
-    let figure = format!(r##"<figure>
-    <img src="{url}" {width}>
+    let dims = image_convert::get_image_dims(&url);
+
+    let (width, height) = match dims {
+        Ok(dim) => (dim.width, dim.height),
+        Err(err) => {
+            println!("Failed to determine dimensions for {} : {}", url, err);
+            (100, 100)
+        }
+    };
+
+    let height = (height as f64) * scaling;
+    let width = (width as f64) * scaling;
+
+    let height = height as usize;
+    let width = width as usize;
+
+    let new_url = url.clone().to_string();
+    let new_url: String = image_convert::modify_url(new_url);
+
+    let figure = format!(
+        r##"<figure>
+    <img src="{new_url}" width="{width}" heigth="{height}" alt="{alt_text}">
     {caption_html}
-    </figure>"##);
+    </figure>"##
+    );
     figure
 }
 
-pub fn create_index(posts: & Vec<Post>) -> String {
-
+pub fn create_index(posts: &Vec<Post>) -> String {
     let mut index_content = "<dl>".to_string();
     for (year, year_posts) in posts
         .iter()
-        .sorted_by_key(|p| p.metadata.date).rev()
+        .sorted_by_key(|p| p.metadata.date)
+        .rev()
         .group_by(|x| x.metadata.date.year().to_string())
         .into_iter()
     {
-         index_content.push_str(&format!("<dt> {} </dt> ", year));
+        index_content.push_str(&format!("<dt> {} </dt> ", year));
         for post in year_posts {
             let link = format!(
                 r##"<dd><a href="/posts/{}.html">{}</a></dd>"##,
@@ -63,7 +86,7 @@ pub fn create_index(posts: & Vec<Post>) -> String {
             index_content.push_str(&link);
         }
     }
-    index_content.push_str("</dl>"); 
+    index_content.push_str("</dl>");
     index_content
 }
 
@@ -178,5 +201,5 @@ pub fn highlight_code(code: &String, language: Option<String>) -> String {
     let end = html.find("</pre>").expect("background color style");
     let html = &html[start..end].trim();
     let html = format!(r##"<pre><code class="code-block">{}</code></pre>"##, html);
-    return html
+    return html;
 }

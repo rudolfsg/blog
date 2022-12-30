@@ -1,5 +1,7 @@
 use crate::html::TEMPLATES;
+use crate::image_convert::{modify_url, self};
 use minify_html::{minify, Cfg};
+use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::{error, fs, io};
 use tera::Context;
@@ -51,7 +53,7 @@ pub fn build_html(name: &str, template_name: &str, path: &str, context: Context)
     std::fs::write(path, html).expect(&format!("{template_name} html write"));
 }
 
-fn copy_assets(source: &str, dest: &str) {
+pub fn copy_assets(source: &str, dest: &str) {
     let folder = fs::read_dir(source).unwrap();
     for file in folder {
         let file_path = file.unwrap().path();
@@ -77,7 +79,24 @@ fn copy_assets(source: &str, dest: &str) {
     }
 }
 
-pub fn move_assets() {
-    copy_assets("posts/images", "/images/");
-    copy_assets("assets", "/");
+pub fn process_images(source: &str, dest: &str, image_scales: HashMap<String, f64>) {
+    let folder = fs::read_dir(source).unwrap();
+
+    for file in folder {
+        let file_path = file.unwrap().path();
+        let file_name = file_path.file_name().unwrap().to_str().unwrap().to_string();
+        if file_name.starts_with(".") || file_path.is_dir() {
+            continue;
+        }
+
+        let scaling = match image_scales.get(&file_name) {
+            Some(s) => s.clone(),
+            None => 1.0
+        };
+
+        let file_name = modify_url(file_name); 
+        let dest = PathBuf::from(format!("{}{}{}", BUILD_DIR, dest, file_name));
+
+        image_convert::convert_image(file_path, dest, scaling);
+}
 }

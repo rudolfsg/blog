@@ -90,8 +90,13 @@ enum MultiLineType {
 
 Images, interactive graphics, svg?
 
+![wow](images/animation.gif){width=100%}
 
-![](images/jensen_exp.png){width=70%}
+
+![](images/vector.png){width=70%}
+
+
+![](images/jensen_exp.png){width=60%}
 
 hmm
 

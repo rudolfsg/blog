@@ -4,14 +4,14 @@
  
  @font-face {
      font-family: 'Jetbrains Mono';
-     src: url('/JetBrainsMono-Regular.woff2') format('woff2');
+     src: url('fonts/JetBrainsMono-Regular.woff2') format('woff2');
     font-weight: 400;
     font-display: swap;
  }
 
 @font-face {
     font-family: 'Satoshi-Variable';
-    src: url('/Satoshi-Variable.woff2') format('woff2');
+    src: url('fonts/Satoshi-Variable.woff2') format('woff2');
     font-weight: 300 900;
     font-display: swap;
     font-style: normal;

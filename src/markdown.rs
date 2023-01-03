@@ -1,19 +1,11 @@
-use chrono::format::format;
 use itertools::{Itertools, MultiPeek};
 use std::collections::HashMap;
 use std::path::PathBuf;
-use lazy_static::lazy_static;
 use pulldown_cmark::{
-    html as pdc_html, CodeBlockKind, CowStr, Event, LinkType, Options, Parser, Tag,
+    html as pdc_html, CodeBlockKind, CowStr, Event, Options, Parser, Tag,
 };
-use std::{error, fs, io, sync::Mutex};
-use tera::{Context, Tera};
-
-use chrono::{Datelike, NaiveDate};
-use katex;
 
 use crate::html;
-use crate::image_convert;
 
 pub struct EventIterator<'a, I: Iterator<Item = Event<'a>>> {
     parser: MultiPeek<I>,
@@ -46,7 +38,7 @@ impl<'a, I: Iterator<Item = Event<'a>>> Iterator for EventIterator<'a, I> {
         if let Some(event) = self.parser.next() {
             match event {
                 // images + figures
-                Event::Start(Tag::Image(link_type, url, title)) => {
+                Event::Start(Tag::Image(_link_type, url, _title)) => {
                     
                     let caption = match &self.parser.next() {
                         Some(Event::Text(t)) => {
@@ -87,7 +79,7 @@ impl<'a, I: Iterator<Item = Event<'a>>> Iterator for EventIterator<'a, I> {
                     return Some(Event::Html(html.into()));
                 }
                 // code blocks
-                Event::Start(Tag::CodeBlock(block)) => {
+                Event::Start(Tag::CodeBlock(_block)) => {
                     let mut buffer = String::new();
 
                     loop {
@@ -142,12 +134,12 @@ impl<'a, I: Iterator<Item = Event<'a>>> Iterator for EventIterator<'a, I> {
                 _ => Some(event),
             }
         } else {
-            return None;
+            None
         }
     }
 }
 
-pub fn parse_markdown(markdown: &String) -> (String, bool, HashMap<String, f64>) {
+pub fn parse_markdown(markdown: &str) -> (String, bool, HashMap<String, f64>) {
     let parser = Parser::new_ext(markdown, Options::all());
     let mut iterator = EventIterator::new(parser);
     let mut html = String::new();
@@ -158,98 +150,3 @@ pub fn parse_markdown(markdown: &String) -> (String, bool, HashMap<String, f64>)
 
     (html, has_katex, image_scale)
 }
-
-// #[derive(Eq, PartialEq, Debug)]
-// enum MultiLineType {
-//     CodeBlock,
-//     DisplayModeMath,
-//     None,
-// }
-
-// pub fn parse_markdown(markdown: &String) -> (String, bool) {
-//     let mut events = Vec::new();
-//     let mut multiline_type = MultiLineType::None;
-//     let mut buffer = String::new();
-//     let mut has_katex = false;
-
-//     for event in Parser::new_ext(markdown, Options::all()) {
-//         match event {
-//             Event::Start(Tag::Image(link_type, url, title)) => {
-//                 // read images from sibling instead of child folder
-//                 let new_url: CowStr = url.replace("images/", "/images/").into();
-//                 let new_event =
-//                     Event::Start(Tag::Image(link_type.to_owned(), new_url, title.to_owned()));
-//                 events.push(new_event);
-//             }
-//             Event::Start(Tag::CodeBlock(block)) => {
-//                 buffer = String::new();
-//                 multiline_type = MultiLineType::CodeBlock;
-//             }
-//             Event::End(Tag::CodeBlock(kind)) => {
-//                 let language = match kind {
-//                     CodeBlockKind::Fenced(lang) => Some(lang.to_string()),
-//                     CodeBlockKind::Indented => None,
-//                 };
-//                 let html = highlight_code(&buffer, language);
-//                 events.push(Event::Html(CowStr::from(html)));
-//                 multiline_type = MultiLineType::None;
-//             }
-
-//             Event::Text(text) => match multiline_type {
-//                 MultiLineType::CodeBlock => buffer.push_str(&text),
-//                 MultiLineType::DisplayModeMath => {
-//                     buffer.push_str(&text.trim().to_string());
-
-//                     if text.trim() == "$$" {
-//                         // end of multiline equation
-//                         let (equation, flag) = parse_equation(&buffer);
-//                         events.push(Event::Html(equation.into()));
-//                         multiline_type = MultiLineType::None;
-//                         if flag {
-//                             has_katex = true
-//                         };
-//                     }
-//                 }
-//                 MultiLineType::None => {
-//                     if !text.contains('$') {
-//                         events.push(Event::Text(text));
-//                     } else if text.trim() == "$$" {
-//                         // start of multi line equation
-//                         buffer = String::new();
-//                         multiline_type = MultiLineType::DisplayModeMath;
-//                         buffer.push_str(&text);
-//                     } else {
-//                         let (equation, flag) = parse_equation(&text.trim().to_string());
-//                         events.push(Event::Html(equation.into()));
-//                         if flag {
-//                             has_katex = true
-//                         };
-//                     }
-//                 }
-//             },
-//             Event::Code(s) => {
-//                 // inline code
-//                 // synectic fails to find from first line so kinda useless now
-//                 // let html = highlight_code(&s.to_string(), None);
-//                 // events.push(Event::Html(CowStr::from(html)));
-//                 events.push(Event::Code(s))
-//             }
-//             _ => {
-//                 // println!("{:?}", event);
-//                 events.push(event);
-//             }
-//         }
-//     }
-
-//     if multiline_type != MultiLineType::None {
-//         println!(
-//             "Parsing failing due to multiline content: {:?}",
-//             multiline_type
-//         );
-//         panic!()
-//     }
-
-//     let mut html_output = String::new();
-//     pdc_html::push_html(&mut html_output, events.into_iter());
-//     return (html_output, has_katex);
-// }

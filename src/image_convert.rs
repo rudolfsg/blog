@@ -1,36 +1,59 @@
 use image::*;
-use imagesize;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use webp::*;
+use std::fs;
+use rayon::prelude::*; 
+
+
+const CONVERT_TO_WEBP: &[&str] = &["jpg", "jpeg", "png"];
 
 pub fn modify_url(url: String) -> String {
-    let new_url: String = url.replace("images/", "/images/");
+    let mut new_url: String = url.replace("images/", "/images/");
     let ext = new_url.rfind('.').unwrap();
-    let new_url = format!("{}.webp", &new_url[..ext]);
+
+    if CONVERT_TO_WEBP.contains(&&new_url[ext + 1..]) {
+        new_url = format!("{}.webp", &new_url[..ext]);
+    }
+
     new_url
 }
 
-pub fn get_image_dims(url: &str) -> Result<imagesize::ImageSize, imagesize::ImageError>{
+pub fn get_image_dims(url: &str) -> Result<imagesize::ImageSize, imagesize::ImageError> {
     let dims = imagesize::size(format!("posts/{}", url));
     dims
 }
 
 pub fn convert_image(source: PathBuf, dest: PathBuf, size_factor: f64) {
-    // Using `image` crate, open the included .jpg file
-    let img = image::open(source).unwrap();
-    let (w, h) = img.dimensions();
-    // Optionally, resize the existing photo and convert back into DynamicImage
-    let img: DynamicImage = image::DynamicImage::ImageRgba8(imageops::resize(
-        &img,
-        (w as f64 * size_factor) as u32,
-        (h as f64 * size_factor) as u32,
-        imageops::FilterType::Triangle,
-    ));
+    let ext = source.extension().unwrap();
+    let ext = ext.to_str().unwrap();
 
-    // Create the WebP encoder for the above image
-    let encoder: Encoder = Encoder::from_image(&img).unwrap();
-    // Encode the image at a specified quality 0-100
-    let webp: WebPMemory = encoder.encode(75f32);
-    // Define and write the WebP-encoded file to a given path
-    std::fs::write(&dest, &*webp).unwrap();
+    if CONVERT_TO_WEBP.contains(&ext) {
+        let mut img = image::open(&source).unwrap();
+        let (w, h) = img.dimensions();
+        if size_factor != 1.0 {
+            println!("Rescaling {:?}", &source);
+            img = image::DynamicImage::ImageRgba8(imageops::resize(
+                &img,
+                (w as f64 * size_factor) as u32,
+                (h as f64 * size_factor) as u32,
+                imageops::FilterType::Gaussian,
+            ));
+        }
+        let encoder: Encoder = Encoder::from_image(&img).unwrap();
+        let webp: WebPMemory;
+        if ext == "png" {
+            webp = encoder.encode_lossless();
+        }
+        else {
+            webp = encoder.encode(85f32)
+        };
+        std::fs::write(&dest, &*webp).unwrap();
+    } else {
+        if size_factor != 1.0 {
+            println!("Rescaling not supported for {ext}, skipping {source:?}")
+        }
+        fs::copy(source, dest).expect("copy file");
+
+    }
+
 }

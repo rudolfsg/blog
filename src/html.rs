@@ -1,9 +1,9 @@
 use crate::image_convert;
 use crate::post::Post;
-use chrono::{Datelike, NaiveDate};
+use chrono::Datelike;
 use itertools::Itertools;
 use lazy_static::lazy_static;
-use tera::{Context, Tera};
+use tera::Tera;
 
 use syntect::highlighting::ThemeSet;
 use syntect::html::highlighted_html_for_string;
@@ -35,10 +35,7 @@ pub fn create_figure(
         None => ("".to_string(), "No description".to_string()),
     };
 
-    let scaling = match scaling {
-        Some(v) => v,
-        None => 1.0,
-    };
+    let scaling = scaling.unwrap_or(1.0);
 
     let dims = image_convert::get_image_dims(&url);
 
@@ -56,8 +53,7 @@ pub fn create_figure(
     let height = height as usize;
     let width = width as usize;
 
-    let new_url = url.clone().to_string();
-    let new_url: String = image_convert::modify_url(new_url);
+    let new_url: String = image_convert::modify_url(url);
 
     let figure = format!(
         r##"<figure>
@@ -68,7 +64,7 @@ pub fn create_figure(
     figure
 }
 
-pub fn create_index(posts: &Vec<Post>) -> String {
+pub fn create_index(posts: &[Post]) -> String {
     let mut index_content = "<dl>".to_string();
     for (year, year_posts) in posts
         .iter()
@@ -80,7 +76,7 @@ pub fn create_index(posts: &Vec<Post>) -> String {
         index_content.push_str(&format!("<dt> {} </dt> ", year));
         for post in year_posts {
             let link = format!(
-                r##"<dd><a href="/posts/{}.html">{}</a></dd>"##,
+                r##"<dd><a href="/posts/{}">{}</a></dd>"##,
                 post.metadata.slug, post.metadata.title
             );
             index_content.push_str(&link);
@@ -107,11 +103,11 @@ pub fn parse_equation(text: &String) -> (String, bool) {
         }
         let opts = katex::Opts::builder().display_mode(true).build().unwrap();
         let equation =
-            katex::render_with_opts(slice, &opts).expect("rendered display mode equation");
+            katex::render_with_opts(slice, opts).expect("rendered display mode equation");
         (equation, true)
     } else {
         // inline equations
-        let matches: Vec<_> = text.match_indices("$").collect();
+        let matches: Vec<_> = text.match_indices('$').collect();
         let mut indices = Vec::new();
 
         if matches.len() <= 1 {
@@ -139,7 +135,7 @@ pub fn parse_equation(text: &String) -> (String, bool) {
                 }
                 let start = indices[0];
                 let end = indices[1];
-                let mut slice = "";
+                let slice: &str;
 
                 if *start == 0 {
                     slice = "";
@@ -154,7 +150,7 @@ pub fn parse_equation(text: &String) -> (String, bool) {
 
                 let opts = katex::Opts::builder().display_mode(false).build().unwrap();
                 let equation =
-                    katex::render_with_opts(equation, &opts).expect("rendered inline equation");
+                    katex::render_with_opts(equation, opts).expect("rendered inline equation");
                 output.push_str(&equation);
                 previous_index = *end;
 
@@ -169,7 +165,7 @@ pub fn parse_equation(text: &String) -> (String, bool) {
     }
 }
 
-pub fn highlight_code(code: &String, language: Option<String>) -> String {
+pub fn highlight_code(code: &str, language: Option<String>) -> String {
     let syntax = match language {
         Some(s) => SYNTAX_SET.find_syntax_by_token(&s),
         None => None,
@@ -177,7 +173,7 @@ pub fn highlight_code(code: &String, language: Option<String>) -> String {
 
     let syntax = match syntax {
         Some(s) => s,
-        None => match SYNTAX_SET.find_syntax_by_first_line(&code) {
+        None => match SYNTAX_SET.find_syntax_by_first_line(code) {
             Some(s) => {
                 println!("Code syntax determined from lines, consider adding annotation");
                 s
@@ -189,7 +185,7 @@ pub fn highlight_code(code: &String, language: Option<String>) -> String {
         },
     };
     let html = highlighted_html_for_string(
-        &code,
+        code,
         &SYNTAX_SET,
         syntax,
         &THEME_SET.themes["base16-eighties.dark"],
@@ -201,5 +197,5 @@ pub fn highlight_code(code: &String, language: Option<String>) -> String {
     let end = html.find("</pre>").expect("background color style");
     let html = &html[start..end].trim();
     let html = format!(r##"<pre><code class="code-block">{}</code></pre>"##, html);
-    return html;
+    html
 }

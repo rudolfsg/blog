@@ -1,15 +1,10 @@
-#![allow(unused)]
-
-use chrono::format::format;
-use lazy_static::lazy_static;
-use std::{error, fs, io};
-use chrono::{Datelike, NaiveDate};
-use tera::{Context, Tera};
-use std::path::{Path, PathBuf};
+use std::fs;
+use itertools::Itertools;
+use rayon::prelude::*; 
+use tera::Context;
 use std::collections::HashMap;
 use slug::slugify;
 use fs_extra::dir::get_size;
-
 
 mod post;
 mod markdown; 
@@ -18,30 +13,27 @@ mod build;
 mod image_convert;
 
 use post::Post;
+
 // TODO:
-// process html in parallel
-// figures for images - resizing?
 // consider SASS instead of plain CSS for nesting, variable defs etc
 // light theme toggle
-// .html at end oflink - need to folderise?
 
-
+pub const BUILD_DIR: &str = "build";
+pub const MINIFY: bool = false;
+const BLOG_NAME: &str = "blog";
+const CLEAN_BUILD: bool = true; 
 
 fn main() {
 
-
-    // image_convert::test_image();
-    // panic!();
     use std::time::Instant;
     let time = Instant::now();
 
-    const BLOG_NAME: &str = "My Blog";
-    const CLEAN_BUILD: bool = true; 
+    
 
     build::init_build(CLEAN_BUILD); 
 
     // build posts
-    let markdown_files = fs::read_dir("posts").unwrap();
+    let markdown_files = fs::read_dir("posts").unwrap().collect_vec();
     let mut posts: Vec<Post> = Vec::new();
     // todo: merge all scales after for loop
     let mut image_scale : HashMap<String, f64> = HashMap::new();
@@ -50,7 +42,7 @@ fn main() {
         let file_path = file.unwrap().path();
         let file_name = file_path.file_name().unwrap().to_str().unwrap();
 
-        if file_name.starts_with(".") || file_path.is_dir() {
+        if file_name.starts_with('.') || file_path.is_dir() {
             continue;
         } // ignore .DS_Store etc
         let file_ext = file_path.extension().unwrap().to_str().unwrap();
@@ -81,7 +73,6 @@ fn main() {
         posts.push(post);
 
     }
-    println!("Image scales: {:?}", image_scale);
     // create index.html
     let index_content = html::create_index(& posts);
     let mut context = Context::new();
@@ -103,8 +94,7 @@ fn main() {
                 v.push(post.clone());
             } 
             else {
-                let mut v: Vec<Post> = Vec::new();
-                v.push(post.clone()); 
+                let v: Vec<Post> = vec![post.clone()]; 
                 unique_tags.insert(tag, v); 
             }
         }
@@ -130,14 +120,14 @@ fn main() {
         build::build_html("all-tags", "all-tags.html", "/tags/", context);
  
 
-    build::copy_assets("assets", "/");
-    build::process_images("posts/images","/images/" , image_scale);
+    build::copy_assets("assets", BUILD_DIR);
+    build::process_images("posts/images","/images/" , &image_scale);
 
 
     let elapsed = time.elapsed();
     println!("Done in: {:.2?}", elapsed);
 
-    let folder_size = get_size(build::BUILD_DIR).unwrap() / 1024;
+    let folder_size = get_size(BUILD_DIR).unwrap() / 1024;
     println!("Build size: {}KB", folder_size); // print directory sile in bytes
   
 }

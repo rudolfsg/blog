@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% block head %}
+<meta name="description" content="A blog about topics including but not limited to tech, AI, finance">
+{% endblock %}
+
+
 {% block content %}
 {% if index_title %}
 <p class="title">{{ index_title }}</p>

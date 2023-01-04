@@ -68,7 +68,7 @@ pub fn create_figure(url: String, caption: Option<String>, scaling: Option<f64>)
 
     let figure = format!(
         r##"<figure>
-    <img src="{new_url}" width="{width}" heigth="{height}" alt="{alt_text}">
+    <img src="{new_url}" width="{width}" height="{height}" alt="{alt_text}">
     {caption_html}
     </figure>"##
     );

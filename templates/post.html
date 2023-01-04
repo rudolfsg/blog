@@ -5,7 +5,11 @@
 
 <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css"
     integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous"> -->
-<link href="/katex.css" rel="stylesheet">
+<link href="/katex.css" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet';">
+<noscript>
+    <link rel="stylesheet" href="/katex.css">
+</noscript>
+
 {% endif %}
 {% endblock %}
 

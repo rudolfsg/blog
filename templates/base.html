@@ -4,13 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="preload" href="fonts/Satoshi-Variable.woff2" as="font" type="font/woff2" crossorigin>
     <link href="/style.css" rel="stylesheet">
 
     {% block head %}{% endblock %}
 
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
-    <link rel="alternate" type="application/rss+xml" href="{{url}}/rss.xml" title="RSS feed">
+    <link rel="alternate" type="application/rss+xml" href="/rss.xml" title="RSS feed">
 
 
 
@@ -22,7 +24,7 @@
     <header>
 
             <svg xmlns="http://www.w3.org/2000/svg">
-                <a href="/">
+                <a href="/" alt="home">
                     <circle class="logo" cx="70" cy="70" r="70" />
                 </a>
             </svg>

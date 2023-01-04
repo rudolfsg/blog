@@ -107,14 +107,10 @@ Images, interactive graphics, svg?
 ![wow](images/animation.gif){width=100%}
 
 
-![](images/vector.png){width=70%}
-
 
 ![](images/jensen_exp.png){width=60%}
 
-hmm
 
-![A good doggo? Time will tell](images/dog.jpeg){ width=50%}
 
 ### Footnotes
 ___

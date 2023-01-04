@@ -1,13 +1,14 @@
 use crate::image_convert;
 use crate::post::Post;
 use chrono::Datelike;
+use css_minify::optimizations::{Level, Minifier};
 use itertools::Itertools;
 use lazy_static::lazy_static;
-use tera::Tera;
-
+use minify_html::{minify, Cfg};
 use syntect::highlighting::ThemeSet;
 use syntect::html::highlighted_html_for_string;
 use syntect::parsing::SyntaxSet;
+use tera::Tera;
 
 lazy_static! {
     pub static ref TEMPLATES: Tera = {
@@ -25,11 +26,21 @@ lazy_static! {
     static ref SYNTAX_SET: SyntaxSet = SyntaxSet::load_defaults_newlines();
 }
 
-pub fn create_figure(
-    url: String,
-    caption: Option<String>,
-    scaling: Option<f64>,
-) -> String {
+pub fn minify_html(html: &String) -> String {
+    let mut cfg = Cfg::spec_compliant();
+    cfg.minify_css = true;
+    let minified = minify(html.as_bytes(), &cfg);
+    String::from_utf8(minified).expect("convert type")
+}
+
+pub fn minify_css(css: &String) -> String {
+    // nb: minify_css crashes with double ;
+    Minifier::default()
+        .minify(&css.replace(";;", ";"), Level::Three)
+        .expect("minified css")
+}
+
+pub fn create_figure(url: String, caption: Option<String>, scaling: Option<f64>) -> String {
     let (caption_html, alt_text) = match caption {
         Some(s) => (format!("<figcaption>{}</figcaption>", s), s),
         None => ("".to_string(), "No description".to_string()),

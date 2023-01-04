@@ -4,7 +4,13 @@ date: 2022-12-27
 tags: [Programming, Rust]
 ---
 
+https://github.com/raphlinus/pulldown-cmark/issues/6
+https://github.com/raphlinus/pulldown-cmark/pull/622
+
+https://markoskon.com/creating-font-subsets/
 Hello there!? Is "this" you_ ,.;
+
+I'm currently using Obsidian (link) for taking notes
 
 The most important feature distinguishing reinforcement learning from other types of learning is that it uses training information that _evaluates the actions_ taken rather than instructs by giving correct actions. This is what creates the need for active exploration, for an explicit search for good behavior. Purely evaluative feedback indicates how good the action taken was, but not whether it was the best or the worst action possible. 
 
@@ -41,7 +47,9 @@ Also:
 
 I want inline equations like $\sum^N_i x_i^2$ which can be nice. But full equations are great too:
 
-$$\sum^N_i y_i^3$$
+$$
+\sum^N_i y_i^3
+$$
 
 Nice, huh?
 
@@ -84,6 +92,12 @@ enum MultiLineType {
 
 | Asset      | Allocation |
 | ----------- | ----------- |
+| Stocks      | 60       |
+| Bondss and other  | 40        |
+| Crypto | 0 |
+
+| Asset      | Allocation |
+| ----------- | ----------- |
 | Stocks      | 60%       |
 | Bonds   | 40%        |
 | Crypto | 0% |
@@ -103,7 +117,6 @@ hmm
 ![A good doggo? Time will tell](images/dog.jpeg){ width=50%}
 
 ### Footnotes
-
 ___
 
 

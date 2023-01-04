@@ -10,6 +10,9 @@
 
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
+    <link rel="alternate" type="application/rss+xml" href="{{url}}/rss.xml" title="RSS feed">
+
+
 
     <title>{{ title }}</title>
 </head>
@@ -17,13 +20,14 @@
 <body>
 
     <header>
-        <svg class="logo" xmlns="http://www.w3.org/2000/svg">
-            <a href="/"> 
-                <circle cx="70" cy="70" r="70" fill="red" />
-                </a>
-        </svg>
 
-        <h1 class = "heading"> <a href="/"> blog </a> </h1>
+            <svg xmlns="http://www.w3.org/2000/svg">
+                <a href="/">
+                    <circle class="logo" cx="70" cy="70" r="70" />
+                </a>
+            </svg>
+
+            <h1 class="heading"> <a href="/"> blog </a> </h1>
     </header>
 
     <div class="content">{% block content %}{% endblock %}</div>

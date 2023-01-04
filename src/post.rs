@@ -2,6 +2,7 @@ use std::{error::Error, collections::HashMap};
 use serde::{Serialize, Deserialize};
 use chrono::NaiveDate;
 use slug::slugify;
+use crate::BLOG_URL;
 
 use crate::markdown; 
 
@@ -11,6 +12,7 @@ pub struct Metadata{
     pub date: NaiveDate, 
     pub slug: String, 
     pub tags: Vec<String>,
+    pub url: String, 
 }
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
 pub struct Post {
@@ -30,7 +32,10 @@ impl Post {
         let contents = &slice[metadata_end..]; 
 
         let mut metadata: serde_yaml::Value = serde_yaml::from_str(metadata).unwrap();
-        metadata["slug"] = slugify(metadata["title"].as_str().unwrap()).into();
+        let slug = slugify(metadata["title"].as_str().unwrap());
+        let url = format!("{}/posts/{}/", BLOG_URL, slug);
+        metadata["slug"] = slug.into();
+        metadata["url"] = url.into(); 
 
         let metadata: Metadata = serde_yaml::from_value(metadata)?;
         // println!("{:?}", metadata); 

@@ -11,18 +11,18 @@
 
 {% block content %}
 <div class="post-meta">
-<p class="title">{{ title }}</p>
-<div class="post-tag-and-date"> 
-<p class="tags">
-    {% for tag in tags %}
-    <a href="/tags/{{ tag | slugify }}">{{ tag }}</a>
-    {% if not loop.last %}
-    |
-    {% endif %}
-    {% endfor %}
-</p>
-<p class="date"> {{ date }} </p>
-</div>
+    <p class="title">{{ title }}</p>
+    <div class="post-tag-and-date">
+        <p class="tags">
+            {% for tag in tags %}
+            <a href="/tags/{{ tag | slugify }}">{{ tag }}</a>
+            {% if not loop.last %}
+            |
+            {% endif %}
+            {% endfor %}
+        </p>
+        <p class="date"> {{ date }} </p>
+    </div>
 </div>
 <div> {{ content | safe }}</div>
 {% endblock %}

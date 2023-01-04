@@ -1,7 +1,6 @@
-use crate::html::TEMPLATES;
+use crate::html::{TEMPLATES, minify_css, minify_html};
 use crate::image_convert::{self, modify_url};
 use crate::{BUILD_DIR, MINIFY};
-use minify_html::{minify, Cfg};
 use rayon::prelude::{IntoParallelRefIterator, ParallelIterator};
 use std::collections::HashMap;
 use std::fs::DirEntry;
@@ -31,11 +30,6 @@ pub fn init_build(clean_build: bool) {
     create_folder(&format!("{BUILD_DIR}/fonts"));
 }
 
-fn minify_html(html: &String) -> String {
-    let cfg = Cfg::spec_compliant();
-    let minified = minify(html.as_bytes(), &cfg);
-    String::from_utf8(minified).expect("convert type")
-}
 
 pub fn build_html(name: &str, template_name: &str, path: &str, context: Context) {
     let mut html = TEMPLATES
@@ -77,7 +71,7 @@ pub fn copy_assets(source: &str, dest: &str) {
         if file_path.extension().unwrap() == "css" && MINIFY {
             // minify css
             let mut css = fs::read_to_string(file_path).unwrap();
-            css = minify_html(&css);
+            css = minify_css(&css);
             fs::write(path, css).expect("css write");
         } else {
             fs::copy(file_path, path).expect("copy file");
@@ -100,14 +94,12 @@ fn process_single_image(file: &DirEntry, dest: &str, scaling: &f64) -> bool {
 }
 
 pub fn process_images(source: &str, dest: &str, image_scales: &HashMap<String, f64>) {
-    // let folder: Vec<Result<DirEntry, io::Error>> = fs::read_dir(source).unwrap().collect();
-    // let folder: Vec<DirEntry> = folder.iter().map(|f| f.unwrap()).collect();
     let files: Vec<DirEntry> = fs::read_dir(source)
         .unwrap()
         .map(|result| result.unwrap())
         .collect();
 
-    let result: Vec<bool> = files
+    let _result: Vec<bool> = files
         .par_iter()
         .map(|f| {
             process_single_image(

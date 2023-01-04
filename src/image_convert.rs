@@ -2,7 +2,6 @@ use image::*;
 use std::path::PathBuf;
 use webp::*;
 use std::fs;
-use rayon::prelude::*; 
 
 
 const CONVERT_TO_WEBP: &[&str] = &["jpg", "jpeg", "png"];

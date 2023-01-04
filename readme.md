@@ -1,3 +1,10 @@
+# Blog
+
+Simple, minimal static site generator written in Rust.
+
+Features:
+* no javascript
+* code syntax highlighting with 
 
 ## Develop
 

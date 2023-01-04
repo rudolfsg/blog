@@ -1,289 +1,316 @@
  /* https: //www.fontshare.com */
  /* https: //wakamaifondue.com/ */
  /* https: //markoskon.com/creating-font-subsets/ */
- 
+
+:root {
+    --text-color: #f8fafc;
+    --bg-color: #301934;
+    --outline-color: rgba(250, 100, 50, 0.5);
+    --link-color: #fa6432;
+    --logo-color: red; 
+}
+
+/* :root {
+    --text-color: #101315;
+    --bg-color: #ffffff;
+    --outline-color: rgba(3, 234, 255, 0.779);
+    --link-color: #14aef6;
+    --logo-color: rgb(1, 234, 255);
+} */
+
+
  @font-face {
      font-family: 'Jetbrains Mono';
      src: url('fonts/JetBrainsMono-Regular.woff2') format('woff2');
-    font-weight: 400;
-    font-display: swap;
+     font-weight: 400;
+     font-display: swap;
  }
 
-@font-face {
-    font-family: 'Satoshi-Variable';
-    src: url('fonts/Satoshi-Variable.woff2') format('woff2');
-    font-weight: 300 900;
-    font-display: swap;
-    font-style: normal;
-}
+ @font-face {
+     font-family: 'Satoshi-Variable';
+     src: url('fonts/Satoshi-Variable.woff2') format('woff2');
+     font-weight: 300 900;
+     font-display: swap;
+     font-style: normal;
+ }
 
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+ * {
+     box-sizing: border-box;
+     margin: 0;
+     padding: 0;
+ }
 
-html {
-    overflow-y: scroll;
-    height: 100%;
-    /* font-family: system-ui; */
-    font-family: Satoshi-Variable, sans-serif;
-    
-    font-size: 100%;
-    line-height: 1.5;
-    word-wrap: break-word;
-    margin: 0 auto;
-    padding: 1.5em;
-    background-color: #301934;
-    color: #fff3ef;
-}
+ html {
+     overflow-y: scroll;
+     height: 100%;
+     /* font-family: system-ui; */
+     font-family: Satoshi-Variable, sans-serif;
+     font-size: 100%;
+     line-height: 1.5;
+     word-wrap: break-word;
+     margin: 0 auto;
+     padding: 1.5em;
+     background-color: var(--bg-color);
+     color: var(--text-color);
+ }
 
-p {
-    margin: 1em 0;
-    line-height: 1.5;
-}
+ p {
+     margin: 1em 0;
+     line-height: 1.5;
+ }
 
-strong {
-    font-weight: 700;
-}
+ strong {
+     font-weight: 700;
+ }
 
-header {
+ header {
+     display: flex;
+     justify-content: space-between;
+
+ }
+
+ .heading>a {
+     color: var(--text-color);
+     /* font-family: serif; */
+     font-size: 2em;
+
+ }
+
+ .heading>a:hover,
+ .heading>a:focus,
+ .heading>a:active {
+     text-decoration: none;
+ }
+
+ .heading {
+     padding: 0;
+     margin: 0;
+ }
+
+ .logo {
+    fill: var(--logo-color);
+ }
+
+ .about-icons {
     display: flex;
-    justify-content: space-between;
-        
-}
+    justify-content: center;
+ }
 
-.heading > a  {
-    color: #fff3ef;
-    /* font-family: serif; */
-    font-size: 2em;
-    
-}
+ .post-meta {
+     display: flex;
+     justify-content: space-between;
+     margin: 0.75em 0 -.5em 0;
+ }
 
-.heading > a:hover,
-.heading>a:focus,
-.heading>a:active {
-    text-decoration: none;
-}
-
-.heading {
-    padding: 0;
-    margin: 0;
-}
-
-.post-meta {
-    display: flex;
-    justify-content: space-between;
-    margin: 0.75em 0 -.5em 0;
-}
-
-.title {
-    font-size: 2.5em;
-    font-weight: bold;
-    padding: 0;
-    margin: 0;
-}
+ .title {
+     font-size: 2.5em;
+     font-weight: bold;
+     padding: 0;
+     margin: 0;
+ }
 
 
-.post-tag-and-date {
-    text-align: right;
-}
+ .post-tag-and-date {
+     text-align: right;
+ }
 
 
-.tags {
-    margin: 0;
-    font-weight: bold;
-}
+ .tags {
+     margin: 0;
+     font-weight: bold;
+ }
 
-.date {
-    font-weight: bold;
-    margin: 0;
-}
+ .date {
+     font-weight: bold;
+     margin: 0;
+ }
 
-footer { 
-    float: right;
-}
+ footer {
+     float: right;
+ }
 
-footer > h1 > a {
-    color: #fff3ef;
-}
+ footer>h1>a {
+     color: var(--text-color);
+ }
 
-/* footnotes line  */
-h3 > hr,
-h3 > th {
-    padding: 0;
-    margin: 0;
-}
+ /* footnotes line  */
+ h3>hr,
+ h3>th {
+     padding: 0;
+     margin: 0;
+ }
 
 
 
-/* inline code */
-p > code {
-    /* background-color: #181825; */
-    padding: 0.05em 0.2em;
-    border: 1px dashed rgba(250, 100, 50, 0.5);
-}
+ /* inline code */
+ p>code {
+     /* background-color: #181825; */
+     padding: 0.05em 0.2em;
+     border: 1px dashed var(--outline-color);
+ }
 
-/* code block  */
-pre {
-    border: 1px dashed rgba(250, 100, 50, 0.5);
-    margin-bottom: .5em;
-    background-color: #301934;
+ /* code block  */
+ pre {
+     border: 1px dashed var(--outline-color);
+     margin-bottom: .5em;
+     background-color: var(--bg-color);
 
-    max-height: 70vh;
-        /* margin: 1em 0; */
-        padding: 1em;
-        overflow: auto;
-        font-size: 0.85rem;
-        white-space: pre-wrap;
+     max-height: 70vh;
+     /* margin: 1em 0; */
+     padding: 1em;
+     overflow: auto;
+     font-size: 0.85rem;
+     white-space: pre-wrap;
 
-    /* enable for centered code */
-        /* display: table;
+     /* enable for centered code */
+     /* display: table;
     margin-left: auto;
     margin-right: auto; */
-}
+ }
 
-code {
-    font-family: Jetbrains Mono, monospace;
-}
-
-
-@media (min-width: 768px) {
-    html {
-        font-size: 125%;
-        max-width: 42em;
-    }
-}
-
-h1,
-h2,
-h3,
-h4 {
-    margin: 2.5rem 0 1.5rem 0;
-    line-height: 1.25;
-}
-
-h3 {
-    /* used for footnotes  */
-    margin: 2.5rem 0 0 0;
-}
-
-a {
-    color: #fa6432;
-    text-decoration: none;
-}
-
-a:hover,
-a:focus,
-a:active {
-    text-decoration: underline;
-}
+ code {
+     font-family: Jetbrains Mono, monospace;
+ }
 
 
+ @media (min-width: 768px) {
+     html {
+         font-size: 125%;
+         max-width: 42em;
+     }
+ }
 
-ol,
-ul {
-    margin: 0 2em;
-}
+ h1,
+ h2,
+ h3,
+ h4 {
+     margin: 2.5rem 0 1.5rem 0;
+     line-height: 1.25;
+ }
 
-dt {
-    font-weight: bold;
-    margin: 1em 0;
-}
+ h3 {
+     /* used for footnotes  */
+     margin: 2.5rem 0 0 0;
+ }
 
-dd {
-    font-weight: bold;
-    margin: -1em 0 1em 1em;
-}
+ a {
+     color: var(--link-color);
+     text-decoration: none;
+ }
 
-img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    margin: 0 auto;
-    padding: 0.5em;
-}
+ a:hover,
+ a:focus,
+ a:active {
+     text-decoration: underline;
+ }
 
-blockquote {
-    padding-left: 1em;
-    font-style: italic;
-    border-left: solid 1px #fa6432;
-}
 
-table {
-    font-size: 1rem;
-    text-align: left;
-    caption-side: bottom;
-    margin-bottom: 2em;
-    margin-left: auto;
-    margin-right: auto;
 
-    max-height: 70vh;
-    /* margin: 1em 0; */
-    padding: 1em;
-    overflow: auto;
-    font-size: 0.85rem;
-    font-family: monospace, monospace;
-    border: 1px dashed rgba(250, 100, 50, 0.5);
-}
+ ol,
+ ul {
+     margin: 0 2em;
+ }
 
-table * {
-    border: none;
-}
+ dt {
+     font-weight: bold;
+     margin: 1em 0;
+ }
 
-table thead,
-table tr {
-    display: table;
+ dd {
+     font-weight: bold;
+     margin: -1em 0 1em 1em;
+ }
+
+ img {
+     max-width: 100%;
+     height: auto;
+     display: block;
+     margin: 0 auto;
+     padding: 0.5em;
+ }
+
+ blockquote {
+     padding-left: 1em;
+     font-style: italic;
+     border-left: solid 1px var(--link-color);
+ }
+
+ table {
     table-layout: auto;
-    width: 100%;
-}
 
-table tr:nth-child(even) {
-    background-color: rgba(200, 200, 200, 0.2);
-}
+     font-size: 1rem;
+     text-align: center;
+     caption-side: bottom;
+     margin-bottom: 2em;
+     margin-left: auto;
+     margin-right: auto;
 
-table tbody {
-    display: block;
-    max-height: 70vh;
-    overflow-y: auto;
-}
+     max-height: 70vh;
+     /* margin: 1em 0; */
+     padding: 1em;
+     overflow: auto;
+     font-size: 0.85rem;
+     font-family: monospace, monospace;
+     border: 1px dashed var(--outline-color);
+ }
 
-table td,
-table th {
-    /* padding: 0.25em; */
-    padding: 0 2em;
-}
+ table * {
+     border: none;
+ }
 
-figure {
-    margin: 1em 0;
-}
+ table thead,
+ table tr {
+     display: auto;
+     table-layout: auto;
+     width: 100%;
+ }
 
-figure figcaption {
-    /* font-family: Jetbrains Mono, monospace; */
-    font-size: 0.75em;
-    text-align: center;
-    border: 1px dashed rgba(250, 100, 50, 0.5);
+ table tr:nth-child(even) {
+     background-color: rgba(200, 200, 200, 0.2);
+ }
 
-            display: table; 
-                margin-left: auto;
-                margin-right: auto;
-                padding: .5em 1em .5em 1em; 
+ /* table tbody {
+     display: block;
+     max-height: 70vh;
+     overflow-y: auto;
+ } */
 
-}
+ table td,
+ table th {
+     /* padding: 0.25em; */
+     padding: 0 2em;
+ }
 
-.footnote-definition sup {
-    margin-left: -1.5em;
-    float: left;
-}
+ figure {
+     margin: 1em 0;
+ }
 
-.footnote-definition .footnote-body {
-    margin: 1em 0;
-    padding: 0 1em;
-    border: 1px dashed rgba(250, 100, 50, 0.3);
-    background-color: rgba(200, 200, 200, 0.2);
-}
+ figure figcaption {
+     /* font-family: Jetbrains Mono, monospace; */
+     font-size: 0.75em;
+     text-align: center;
+     border: 1px dashed var(--outline-color);
 
-.footnote-definition .footnote-body p:only-child {
-    margin: 0.2em 0;
-}
+     display: table;
+     margin-left: auto;
+     margin-right: auto;
+     padding: .5em 1em .5em 1em;
+
+ }
+
+ .footnote-definition sup {
+     margin-left: -1.2em;
+     float: left;
+ }
+
+ .footnote-definition .footnote-body {
+     margin: 1em 0;
+     padding: 0 1em;
+     /* border: 1px dashed rgba(250, 100, 50, 0.3);
+     background-color: rgba(200, 200, 200, 0.2); */
+ }
+
+ .footnote-definition .footnote-body p:only-child {
+     margin: 0.2em 0;
+ }

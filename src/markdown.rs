@@ -47,8 +47,6 @@ impl<'a, I: Iterator<Item = Event<'a>>> Iterator for EventIterator<'a, I> {
                         },
                         _ => None,
                     };
-                    // end of figure
-                    // self.parser.next();
 
                     // extract width=x%.
                     let scaling = match &self.parser.peek() {
@@ -104,16 +102,16 @@ impl<'a, I: Iterator<Item = Event<'a>>> Iterator for EventIterator<'a, I> {
                         // no equation
                         Some(Event::Text(text))
                     } 
-                    else if text.trim() == "$$" {
+                    else if text.trim().starts_with("$$") {
                         // multi line equation
-                        let mut buffer = "$$".to_string();
+                        let mut buffer = text.to_string();
                         loop {
                             let next = self.parser.next();
                             match next {
                                 Some(e) => match e {
                                     Event::Text(text) => {
                                         buffer.push_str(&text);
-                                        if text.trim() == "$$" {
+                                        if text.trim().ends_with("$$") {
                                             let (equation, flag) = html::parse_equation(&buffer);
                                             if flag {self.enable_katex()}
                                             return Some(Event::Html(equation.into()))

@@ -4,11 +4,13 @@
 <meta name="description" content="A blog about topics including but not limited to tech, AI, finance">
 {% endblock %}
 
-
-{% block content %}
+{% block postmeta %}
 {% if index_title %}
 <p class="title">{{ index_title }}</p>
 {% endif %}
-<hr />
+{% endblock %}
+
+{% block content %}
+
 {{ content | safe }}
 {% endblock %}

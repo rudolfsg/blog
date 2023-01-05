@@ -13,7 +13,7 @@ Features:
 
 ## Usage
 
-1. Edit markdown files in `/posts`
+1. Edit markdown files in `/posts`. See `example_markdown.md` for formatting
 2. Run `cargo run --release`
 3. Check results by running a webserver.
  Don't forget to serve files from root: 

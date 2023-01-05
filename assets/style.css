@@ -2,15 +2,15 @@
  /* https: //wakamaifondue.com/ */
  /* https: //markoskon.com/creating-font-subsets/ */
 
-:root {
-    --text-color: #f8fafc;
-    --bg-color: #301934;
-    --outline-color: rgba(250, 100, 50, 0.5);
-    --link-color: #fa6432;
-    --logo-color: red; 
-}
+ :root {
+     --text-color: #f8fafc;
+     --bg-color: #301934;
+     --outline-color: rgba(250, 100, 50, 0.5);
+     --link-color: #fa6432;
+     --logo-color: red;
+ }
 
-/* :root {
+ /* :root {
     --text-color: #101315;
     --bg-color: #ffffff;
     --outline-color: rgba(3, 234, 255, 0.779);
@@ -89,30 +89,32 @@
  }
 
  .logo {
-    fill: var(--logo-color);
+     fill: var(--logo-color);
  }
 
  .about-icons {
-    display: flex;
-    justify-content: center;
+     display: flex;
+     justify-content: center;
  }
 
- .post-meta {
+ .postmeta {
      display: flex;
      justify-content: space-between;
+     align-items: flex-end;
      margin: 0.75em 0 -.5em 0;
  }
 
  .title {
-     font-size: 2.5em;
      font-weight: bold;
      padding: 0;
      margin: 0;
+     font-size: 2em;
  }
 
 
  .post-tag-and-date {
      text-align: right;
+     min-width: 30%;
  }
 
 
@@ -124,6 +126,7 @@
  .date {
      font-weight: bold;
      margin: 0;
+     padding: 0 0 0.3em 0;
  }
 
  footer {
@@ -139,6 +142,10 @@
  h3>th {
      padding: 0;
      margin: 0;
+ }
+
+ hr {
+     color: var(--text-color);
  }
 
 
@@ -174,18 +181,25 @@
  }
 
 
+
  @media (min-width: 768px) {
      html {
          font-size: 125%;
          max-width: 42em;
      }
+
+     .title {
+         font-size: 2.5em;
+     }
  }
 
- h1,
- h2,
- h3,
- h4 {
+ h1 {
      margin: 2.5rem 0 1.5rem 0;
+     line-height: 1.25;
+ }
+
+ h2 {
+     margin: 1.5rem 0 .5rem 0;
      line-height: 1.25;
  }
 
@@ -205,8 +219,6 @@
      text-decoration: underline;
  }
 
-
-
  ol,
  ul {
      margin: 0 2em;
@@ -219,7 +231,7 @@
 
  dd {
      font-weight: bold;
-     margin: -1em 0 1em 1em;
+     margin: -1em 0 1.5em 1em;
  }
 
  img {
@@ -237,7 +249,7 @@
  }
 
  table {
-    table-layout: auto;
+     table-layout: auto;
 
      font-size: 1rem;
      text-align: center;

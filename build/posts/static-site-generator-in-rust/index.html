@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="preload" href="/fonts/Satoshi-Variable.woff2" as="font" type="font/woff2" crossorigin>
+    <link href="/style.css" rel="stylesheet">
+
+    
+
+
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css"
+    integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous"> -->
+<link href="/katex.css" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet';">
+<noscript>
+    <link rel="stylesheet" href="/katex.css">
+</noscript>
+
+
+
+<meta name="description" content="Static site generator in Rust">
+
+
+
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+    <link rel="alternate" type="application/rss+xml" href="/rss.xml" title="RSS feed">
+
+
+
+    <title>Static site generator in Rust</title>
+</head>
+
+<body>
+
+    <header>
+
+        <svg xmlns="http://www.w3.org/2000/svg">
+            <a href="/" alt="home">
+                <circle class="logo" cx="70" cy="70" r="70" />
+            </a>
+        </svg>
+
+        <h1 class="heading"> <a href="/"> blog </a> </h1>
+    </header>
+
+    <div class="postmeta"> 
+        
+<p class="title">Static site generator in Rust</p>
+<div class="post-tag-and-date">
+    <p class="tags">
+        
+        <a href="/tags/programming">Programming</a>
+        
+        |
+        
+        
+        <a href="/tags/rust">Rust</a>
+        
+        
+    </p>
+    <p class="date"> 2022-12-27 </p>
+</div>
+
+    </div>
+
+    <hr />
+
+    <div class="content">
+   
+<div> <p>Deciding on a starter project to learn a language can be tricky. Initially I tried <a href="https://adventofcode.com/">advent of code</a> but soon found myself not really applying the ideas from <a href="https://doc.rust-lang.org/book/">the book</a>. Then I stumbled upon a discussion on static site generators and so decided to <a href="https://github.com/rudolfsg/blog">give it a go</a>.</p>
+<h2>Static sites</h2>
+<p>I’ve always liked the simplicity of static websites where all pages are generated ahead of time instead of waiting on a back-end server to generate pages on demand. Static content is also a perfect fit for content delivery networks (CDN) which gives good performance. </p>
+<p>Static site generators usually accept a simple text format like markdown as input to generate pages. A simple input format eliminates most of the tool/framework lock-in and substantially increases the probability of your content being usable 10 or 20 years down the line. This is probably why tools like <a href="https://obsidian.md/">Obsidian</a> have become so popular. </p>
+<h2>The plan</h2>
+<p>Write a static site generator from scratch for a blog that I might use <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>≥</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n \geq 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span> times. It should be</p>
+<ol>
+<li>simple to modify</li>
+<li>good performance</li>
+<li>visually minimalistic but (hopefully) not boring</li>
+<li>support code syntax highlighting, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext>LaTeX</mtext></mrow><annotation encoding="application/x-tex">\LaTeX</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8988em;vertical-align:-0.2155em;"></span><span class="mord text"><span class="mord textrm">L</span><span class="mspace" style="margin-right:-0.36em;"></span><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6833em;"><span style="top:-2.905em;"><span class="pstrut" style="height:2.7em;"></span><span class="mord"><span class="mord textrm mtight sizing reset-size6 size3">A</span></span></span></span></span></span><span class="mspace" style="margin-right:-0.15em;"></span><span class="mord text"><span class="mord textrm">T</span><span class="mspace" style="margin-right:-0.1667em;"></span><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.4678em;"><span style="top:-2.7845em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord textrm">E</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2155em;"><span></span></span></span></span><span class="mspace" style="margin-right:-0.125em;"></span><span class="mord textrm">X</span></span></span></span></span></span> equations</li>
+</ol>
+<h1>Your own site generator</h1>
+<p>The steps to generate a site are</p>
+<ol>
+<li>Parse markdown files and transform into html with a library like <a href="https://github.com/raphlinus/pulldown-cmark">pulldown-cmark</a></li>
+<li>Insert them into an html template with a templating library, for Rust <a href="https://github.com/Keats/tera">tera</a> is a popular choice</li>
+<li>Create site index, copy over assets</li>
+</ol>
+<p>To make the site pretty we add a <code>style.css</code> and a font or two and we’re done with the basics. </p>
+<h2>Syntax highlighting</h2>
+<p>By default <code>pulldown-cmark</code> detects code blocks, however, it won’t highlight the syntax. Luckily this is simple to adjust - once we’ve detected a code block we override the default behaviour by feeding the code block into a <a href="https://crates.io/crates/syntect">highlighter</a> and outputting colorised html. </p>
+<p>Now we can have nice code snippets:</p>
+<pre><code class="code-block"><span style="color:#cc99cc;">pub struct </span><span style="color:#d3d0c8;">EventIterator&lt;</span><span style="color:#cc99cc;">&#39;a</span><span style="color:#d3d0c8;">, I: Iterator&lt;Item = Event&lt;</span><span style="color:#cc99cc;">&#39;a</span><span style="color:#d3d0c8;">&gt;&gt;&gt; {
+</span><span style="color:#d3d0c8;">    </span><span style="color:#f2777a;">parser</span><span style="color:#d3d0c8;">: MultiPeek&lt;I&gt;,
+</span><span style="color:#d3d0c8;">    </span><span style="color:#f2777a;">has_katex</span><span style="color:#d3d0c8;">: </span><span style="color:#cc99cc;">bool</span><span style="color:#d3d0c8;">,
+</span><span style="color:#d3d0c8;">    </span><span style="color:#f2777a;">image_scale</span><span style="color:#d3d0c8;">: HashMap&lt;String, </span><span style="color:#cc99cc;">f64</span><span style="color:#d3d0c8;">&gt;,
+</span><span style="color:#d3d0c8;">}
+</span></code></pre>
+<h2>Math equations</h2>
+<p>To render math equations we can use <a href="https://katex.org/">katex</a>. But unlike code blocks <code>pulldown-cmark</code> won’t automatically detect or render math due to lack of standardisation <sup class="footnote-reference"><a href="#math">1</a></sup>, so we have to roll our own.</p>
+<p>To delineate math blocks in markdown I use single dollar signs for inline math <code>$ x^2 $</code> and double for <em>display mode</em> math <code>$$ x^2 $$</code>. We can then detect math blocks by checking each paragraph for <code>$</code>.</p>
+<p>To render the equations we could leave the math blocks alone and include <code>katex</code> auto-render javascript in our site. But in the spirit of static generation, we can render the equations ahead of time with <a href="https://docs.rs/katex/latest/katex/">katex rust bindings</a> and include the necessary fonts/css in our site instead of going to their CDN. </p>
+<p>Now we can do things like</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msubsup><mo>∫</mo><mrow><mo>−</mo><mi mathvariant="normal">∞</mi></mrow><mi mathvariant="normal">∞</mi></msubsup><msup><mi>e</mi><mrow><mo>−</mo><msup><mi>x</mi><mn>2</mn></msup></mrow></msup><mi>d</mi><mi>x</mi><mo>=</mo><msqrt><mi>π</mi></msqrt></mrow><annotation encoding="application/x-tex"> \int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi} </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.3846em;vertical-align:-0.9703em;"></span><span class="mop"><span class="mop op-symbol large-op" style="margin-right:0.44445em;position:relative;top:-0.0011em;">∫</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.4143em;"><span style="top:-1.7881em;margin-left:-0.4445em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">∞</span></span></span></span><span style="top:-3.8129em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">∞</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9703em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:1.0369em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight"><span class="mord mathnormal mtight">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8913em;"><span style="top:-2.931em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="mord mathnormal">d</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.04em;vertical-align:-0.1908em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8492em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord mathnormal" style="margin-right:0.03588em;">π</span></span></span><span style="top:-2.8092em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width='400em' height='1.08em' viewBox='0 0 400000 1080' preserveAspectRatio='xMinYMin slice'><path d='M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1908em;"><span></span></span></span></span></span></span></span></span></span></p>
+<h2>Making things fast(er)(?)</h2>
+<h2>The reality</h2>
+<p>Image conversion a bit lacking - no do it all tool</p>
+<p>https://github.com/raphlinus/pulldown-cmark/issues/6
+https://github.com/raphlinus/pulldown-cmark/pull/622
+https://blog.hamaluik.ca/posts/build-your-own-static-site-generator/
+https://markoskon.com/creating-font-subsets/</p>
+<p>Mix equations <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">x^2 + 5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8974em;vertical-align:-0.0833em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">5</span></span></span></span> and dollars$100 and$5 via escaping.</p>
+<p>I’m currently using Obsidian (link) for taking notes</p>
+<ol>
+<li>subsetting fonts</li>
+<li></li>
+</ol>
+<h3>Footnotes</h3>
+<hr />
+<div class="footnote-definition" id="math"><sup class="footnote-definition-label">1</sup>
+<p>While Markdown is not a proper specification, CommonMark is but the <a href="https://spec.commonmark.org/">spec</a> doesn’t mention math once. Unfortunately, the popular <code>$</code> delimiter allow for ambiguities which is a no-no for a spec.</p>
+</div>
+<p>For <code>pulldown-cmark</code> there’s lots of <a href="https://github.com/raphlinus/pulldown-cmark/issues/6">discussion on the issue</a> going back to 2015 (!). However, there’s good progress on <a href="https://github.com/raphlinus/pulldown-cmark/pull/622">an extension</a> which is still ongoing at time of writing. </p>
+</div>
+</div>
+
+
+    <footer>
+        <h1 class="about"> <a href="/about"> about </a> </h1>
+    </footer>
+
+</body>
+
+</html>

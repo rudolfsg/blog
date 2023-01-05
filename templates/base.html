@@ -23,14 +23,20 @@
 
     <header>
 
-            <svg xmlns="http://www.w3.org/2000/svg">
-                <a href="/" alt="home">
-                    <circle class="logo" cx="70" cy="70" r="70" />
-                </a>
-            </svg>
+        <svg xmlns="http://www.w3.org/2000/svg">
+            <a href="/" alt="home">
+                <circle class="logo" cx="70" cy="70" r="70" />
+            </a>
+        </svg>
 
-            <h1 class="heading"> <a href="/"> blog </a> </h1>
+        <h1 class="heading"> <a href="/"> blog </a> </h1>
     </header>
+
+    <div class="postmeta"> 
+        {% block postmeta %}{% endblock %}
+    </div>
+
+    <hr />
 
     <div class="content">{% block content %}{% endblock %}</div>
 

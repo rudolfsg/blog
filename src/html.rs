@@ -33,7 +33,7 @@ pub fn minify_html(html: &String) -> String {
     String::from_utf8(minified).expect("convert type")
 }
 
-pub fn minify_css(css: &String) -> String {
+pub fn minify_css(css: &str) -> String {
     // nb: minify_css crashes with double ;
     Minifier::default()
         .minify(&css.replace(";;", ";"), Level::Three)
@@ -98,6 +98,8 @@ pub fn create_index(posts: &[Post]) -> String {
 }
 
 pub fn parse_equation(text: &String) -> (String, bool) {
+    println!("text: {}", &text);
+
     if text.len() <= 2 {
         (text.clone(), false)
     } else if text.starts_with("$$") && text.ends_with("$$") {
@@ -115,6 +117,8 @@ pub fn parse_equation(text: &String) -> (String, bool) {
         let opts = katex::Opts::builder().display_mode(true).build().unwrap();
         let equation =
             katex::render_with_opts(slice, opts).expect("rendered display mode equation");
+        // println!("Slice: {}", &equation);
+
         (equation, true)
     } else {
         // inline equations

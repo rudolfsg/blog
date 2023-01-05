@@ -24,12 +24,15 @@ pub struct Post {
 impl Post {
     pub fn extract_metadata(contents: String) -> Result<(Metadata, String), Box<dyn Error>> {
         if !contents.starts_with("---\n"){
-            return Err("invalid metadata")?
+            return Err("valid metadata delimiter")?
         }
+        
         let slice = &contents[4..]; 
-        let metadata_end = slice.find("---\n").expect("metadata delimiter check");
+
+        let metadata_end = slice.find("---\n").expect("valid metadata delimiter");
         let metadata = &slice[..metadata_end];  
-        let contents = &slice[metadata_end..]; 
+        let contents = &slice[metadata_end+4..]; 
+
 
         let mut metadata: serde_yaml::Value = serde_yaml::from_str(metadata).unwrap();
         let slug = slugify(metadata["title"].as_str().unwrap());
@@ -38,7 +41,6 @@ impl Post {
         metadata["url"] = url.into(); 
 
         let metadata: Metadata = serde_yaml::from_value(metadata)?;
-        // println!("{:?}", metadata); 
         Ok((metadata, contents.to_owned()))
     }
     pub fn from_string(contents: String) -> Result<Post, Box<dyn Error>>  {

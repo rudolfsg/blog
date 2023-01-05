@@ -1,4 +1,4 @@
-use crate::html::{TEMPLATES, minify_css, minify_html};
+use crate::html::{minify_css, minify_html, TEMPLATES};
 use crate::image_convert::{self, modify_url};
 use crate::{BUILD_DIR, MINIFY};
 use rayon::prelude::{IntoParallelRefIterator, ParallelIterator};
@@ -29,7 +29,6 @@ pub fn init_build(clean_build: bool) {
     create_folder(&format!("{BUILD_DIR}/tags"));
     create_folder(&format!("{BUILD_DIR}/fonts"));
 }
-
 
 pub fn build_html(name: &str, template_name: &str, path: &str, context: Context) {
     let mut html = TEMPLATES
@@ -105,7 +104,9 @@ pub fn process_images(source: &str, dest: &str, image_scales: &HashMap<String, f
             process_single_image(
                 f,
                 dest,
-                image_scales.get(&f.path().file_name().unwrap().to_str().unwrap().to_string()).unwrap_or(&1.0),
+                image_scales
+                    .get(&f.path().file_name().unwrap().to_str().unwrap().to_string())
+                    .unwrap_or(&1.0),
             )
         })
         .collect();

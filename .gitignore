@@ -14,4 +14,5 @@ Cargo.lock
 
 /target
 .DS_Store
+/venv
 # /build

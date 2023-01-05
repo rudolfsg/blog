@@ -16,15 +16,14 @@ mod rss;
 use post::Post;
 
 pub const BUILD_DIR: &str = "build";
-pub const MINIFY: bool = true;
+pub const MINIFY: bool = false;
 const BLOG_NAME: &str = "blog";
-const BLOG_URL: &str = "https://blog.stuff.com"; 
+const BLOG_URL: &str = "https://grobins.xyz"; 
 const CLEAN_BUILD: bool = true;
 
 fn process_post(path: &PathBuf) -> (Post, HashMap<String, f64>) {
         let file_name = path.file_name().unwrap().to_str().unwrap();
 
-        
         println!("Processing: {}", file_name);
 
         let markdown_input = fs::read_to_string(path).unwrap();

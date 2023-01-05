@@ -1,8 +1,7 @@
 use image::*;
+use std::fs;
 use std::path::PathBuf;
 use webp::*;
-use std::fs;
-
 
 const CONVERT_TO_WEBP: &[&str] = &["jpg", "jpeg", "png"];
 
@@ -42,8 +41,7 @@ pub fn convert_image(source: PathBuf, dest: PathBuf, size_factor: f64) {
         let webp: WebPMemory;
         if ext == "png" {
             webp = encoder.encode_lossless();
-        }
-        else {
+        } else {
             webp = encoder.encode(85f32)
         };
         std::fs::write(&dest, &*webp).unwrap();
@@ -52,7 +50,5 @@ pub fn convert_image(source: PathBuf, dest: PathBuf, size_factor: f64) {
             println!("Rescaling not supported for {ext}, skipping {source:?}")
         }
         fs::copy(source, dest).expect("copy file");
-
     }
-
 }

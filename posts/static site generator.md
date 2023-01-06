@@ -24,16 +24,16 @@ Write a static site generator from scratch in Rust for a blog that I might use $
 
 To generate a static site we:
 1. Parse markdown files and transform into html with a library like [pulldown-cmark](https://github.com/raphlinus/pulldown-cmark)
-2. Insert them into an html template with a templating library, for Rust [tera](https://github.com/Keats/tera) is a popular choice
+2. Insert them into an html template with a templating library, [tera](https://github.com/Keats/tera) is a popular choice
 3. Create site index, copy over assets
 
 To make the site pretty we add a `style.css` and a font or two and we're done with the basics. 
 
 ## Syntax highlighting
 
-By default `pulldown-cmark` detects code blocks, however, it won't highlight the syntax. Luckily this is simple to adjust - `pulldown-cmark` outputs _events_ during parsing, one of which is a [code block](https://docs.rs/pulldown-cmark/latest/pulldown_cmark/enum.Tag.html#variant.CodeBlock). Once we hit this event we can override the default behaviour by feeding the code string block into a [highlighter](https://crates.io/crates/syntect) and outputting colorised html. Also, I've set code block font to [Jetbrains Mono](https://www.jetbrains.com/lp/mono/) which supports ligatures.
+By default `pulldown-cmark` detects code blocks, however, it won't highlight the syntax. Luckily this is simple to adjust: `pulldown-cmark` outputs _events_ during parsing, one of which is a [code block](https://docs.rs/pulldown-cmark/latest/pulldown_cmark/enum.Tag.html#variant.CodeBlock). Once we hit this event we can override the default behaviour by feeding the code string block into a [highlighter](https://crates.io/crates/syntect) and outputting colorised html. Also, I've set code block font to [Jetbrains Mono](https://www.jetbrains.com/lp/mono/) which supports ligatures.
 
-Now we can have nice code snippets:
+This gives us nice code snippets:
 
 ```rust
 pub struct EventIterator<'a, I: Iterator<Item = Event<'a>>> {
@@ -70,7 +70,7 @@ $$ \int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi} $$
 
 ## Making things fast(er)(?)
 
-First of all, since fonts take a while to transfer it might be a good idea to [self-host](https://www.tunetheweb.com/blog/should-you-self-host-google-fonts/) them to avoid going to a third-party CDN and use modern format like WOFF2. [Fontshare](https://www.fontshare.com/) is a good resource and using a variable font keeps things cleaner as you don't have to store $n>10$ font files. Font subsetting is also worth considering. [^font] 
+First of all, since fonts take a while to transfer it might be a good idea to [self-host](https://www.tunetheweb.com/blog/should-you-self-host-google-fonts/) them to avoid going to a third-party CDN and use modern format like WOFF2. [Fontshare](https://www.fontshare.com/) is a good resource and using a variable font keeps things cleaner as you don't have to store $n \approxeq 10$ font files. Font subsetting is also worth considering. [^font] 
 
 But if your post contains a lot of images then reducing their file size will net the biggest performance gains. While there don't seem to be libraries that are as versatile and easy to use as [ImageMagick](https://imagemagick.org/index.php) adding resizing and compression for common formats is doable. Adding gif to mp4 or webm conversion is worth considering. 
 
@@ -82,4 +82,4 @@ ___
 
 For `pulldown-cmark` there's lots of [discussion on the issue](https://github.com/raphlinus/pulldown-cmark/issues/6) going back to 2015 (!). However, there's good progress on [an extension](https://github.com/raphlinus/pulldown-cmark/pull/622) which is still ongoing at time of writing. 
 
-[^font]: [This](https://markoskon.com/creating-font-subsets/) is a great article on subsetting. However, there don't seem to be great rust libraries to do it seamlessly and it might break things if you're not careful, all to save less than ~50kb.
+[^font]: This [article on subsetting](https://markoskon.com/creating-font-subsets/) is great. However, there don't seem to be great rust libraries to do it seamlessly and it might break things if you're not careful, all to save less than ~50kb.

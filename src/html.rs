@@ -98,7 +98,6 @@ pub fn create_index(posts: &[Post]) -> String {
 }
 
 pub fn parse_equation(text: &String) -> (String, bool) {
-    println!("text: {}", &text);
 
     if text.len() <= 2 {
         (text.clone(), false)
@@ -117,7 +116,6 @@ pub fn parse_equation(text: &String) -> (String, bool) {
         let opts = katex::Opts::builder().display_mode(true).build().unwrap();
         let equation =
             katex::render_with_opts(slice, opts).expect("rendered display mode equation");
-        // println!("Slice: {}", &equation);
 
         (equation, true)
     } else {

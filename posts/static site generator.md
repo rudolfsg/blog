@@ -8,9 +8,9 @@ To become familiar with Rust I implemented a static site generator as my first p
 
 ## Static sites
 
-I've always liked the simplicity of static websites where all pages are generated ahead of time instead of waiting on a back-end server to generate pages on demand. Static content is also a perfect fit for content delivery networks (CDN) which gives good performance. 
+I've always liked the simplicity of static websites where all pages are generated ahead of time instead of waiting on a back-end server to generate pages on demand. Static sites are also a perfect fit for content delivery networks (CDN) which enables great performance. 
 
-Static site generators usually accept a simple text format like markdown as input to generate pages. A simple input format eliminates most of the tool/framework lock-in and substantially increases the probability of your content being usable 10 or 20 years down the line. This is probably why note taking software like [Obsidian](https://obsidian.md/) have become so popular. 
+Static site generators usually accept a simple text format like markdown as input to generate pages. A simple input format eliminates most of the tool/framework lock-in and substantially increases the probability of your content being usable 10 or 20 years down the line. This is probably why note-taking software like [Obsidian](https://obsidian.md/) have become so popular. 
 
 ## The plan
 
@@ -47,8 +47,8 @@ pub struct EventIterator<'a, I: Iterator<Item = Event<'a>>> {
 
 `pulldown-cmark` parses embedded images just fine, but it's worthwhile to add some extra logic to make the embedding process smoother and improve site performance:
 
-* by default the image caption won't be transferred to html even though the caption is captured as a part of the `Image` event. Like with syntax highlighting we can capture the parsing event and output adjusted html which includes the caption 
-* when writing a post I want to paste images from the clipboard and not worry about resizing them manually. So I adjusted the image parser to look for an extra tag after the image: For example, `![cool](images/backflip.jpg){width=50%}` would resize the image by half which makes life easier and saves a lot of bandwidth
+* By default the image caption won't be transferred to html even though the caption is captured as a part of the `Image` event. Like with syntax highlighting we can capture the parsing event and output adjusted html which includes the caption 
+* When writing a post I want to paste images from the clipboard and not worry about resizing them manually. So I adjusted the image parser to look for an extra tag after the image: For example, `![cool](images/backflip.jpg){width=50%}` would resize the image by half which makes life easier and saves a lot of bandwidth
 * To further reduce bandwidth I've added conversion of `png` and `jpeg` to `webp`
 
 Now the above command works:

@@ -72,8 +72,9 @@
    
 <div> <p>To become familiar with Rust I implemented a static site generator as my first project. Below is a set of notes which I would’ve found helpful when I started. Code is available <a href="https://github.com/rudolfsg/blog">here</a>.</p>
 <h2>Static sites</h2>
-<p>I’ve always liked the simplicity of static websites where all pages are generated ahead of time instead of waiting on a back-end server to generate pages on demand. Static content is also a perfect fit for content delivery networks (CDN) which gives good performance. </p>
-<p>Static site generators usually accept a simple text format like markdown as input to generate pages. A simple input format eliminates most of the tool/framework lock-in and substantially increases the probability of your content being usable 10 or 20 years down the line. This is probably why note taking software like <a href="https://obsidian.md/">Obsidian</a> have become so popular. </p>
+<p>I’ve always liked the simplicity of static websites where all pages are generated ahead of time instead of waiting on a back-end server to generate pages on demand. Static sites are also a perfect fit for content delivery networks (CDN) which enables great performance. </p>
+<p>Static site generators usually accept a simple text format like markdown as input to generate pages. A simple input format eliminates most of the tool/framework lock-in and substantially increases the probability of your content being usable 10 or 20 years down the line. This is probably why note-taking software like <a href="https://obsidian.md/">Obsidian</a> has become so popular. </p>
+<p>Writing your own generator seems like a good starter project since it has a well-defined outcome and lies in the Goldilocks zone in terms of size - big enough to expose you to most of the language features and not too big to overwhelm and take months to do. Plus it allows you to include only the site functionality you want and learn a bit about web development along the way. </p>
 <h2>The plan</h2>
 <p>Write a static site generator from scratch in Rust for a blog that I might use <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>≥</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n \geq 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span> times. It should</p>
 <ol>
@@ -101,8 +102,8 @@
 <h2>Images</h2>
 <p><code>pulldown-cmark</code> parses embedded images just fine, but it’s worthwhile to add some extra logic to make the embedding process smoother and improve site performance:</p>
 <ul>
-<li>by default the image caption won’t be transferred to html even though the caption is captured as a part of the <code>Image</code> event. Like with syntax highlighting we can capture the parsing event and output adjusted html which includes the caption </li>
-<li>when writing a post I want to paste images from the clipboard and not worry about resizing them manually. So I adjusted the image parser to look for an extra tag after the image: For example, <code>![cool](images/backflip.jpg){width=50%}</code> would resize the image by half which makes life easier and saves a lot of bandwidth</li>
+<li>By default the image caption won’t be transferred to html even though the caption is captured as a part of the <code>Image</code> event. Like with syntax highlighting we can capture the parsing event and output adjusted html which includes the caption </li>
+<li>When writing a post I want to paste images from the clipboard and not worry about resizing them manually. So I adjusted the image parser to look for an extra tag after the image: For example, <code>![cool](images/backflip.jpg){width=50%}</code> would resize the image by half which makes life easier and saves a lot of bandwidth</li>
 <li>To further reduce bandwidth I’ve added conversion of <code>png</code> and <code>jpeg</code> to <code>webp</code></li>
 </ul>
 <p>Now the above command works:</p>
@@ -130,6 +131,12 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 <h2>Other things</h2>
 <p>Self-hosting your assets like fonts and icons <a href="https://www.tunetheweb.com/blog/should-you-self-host-google-fonts/">may improve performance</a> since it avoids going to a third-party CDN. Besides, having a fully self-contained site is nice.</p>
 <p>Modern font formats like WOFF2 take less space and nowadays have <a href="https://caniuse.com/woff2">good support</a> making them an easy choice. Font size can be further improved via subsetting. <sup class="footnote-reference"><a href="#font">2</a></sup> Using a variable font keeps the codebase cleaner as you don’t have to store separate files for italic, bold, regular etc. <a href="https://www.fontshare.com/">Fontshare</a> is a good resource. </p>
+<h1>End result</h1>
+<p>Overall I’m glad I chose this as a starter project and I’m left quite impressed with the quality of Rust tooling and documentation. Performance isn’t bad either - generating this site took 145ms on AMD Ryzen 5600x and Google PageSpeed seems happy too!</p>
+<p><figure>
+    <img src="/images/pagespeed.webp" width="956" height="717" alt="pagespeed.web.dev score">
+    <figcaption>pagespeed.web.dev score</figcaption>
+    </figure></p>
 <h3>Footnotes</h3>
 <hr />
 <div class="footnote-definition" id="math"><sup class="footnote-definition-label">1</sup>

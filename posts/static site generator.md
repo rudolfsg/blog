@@ -10,7 +10,9 @@ To become familiar with Rust I implemented a static site generator as my first p
 
 I've always liked the simplicity of static websites where all pages are generated ahead of time instead of waiting on a back-end server to generate pages on demand. Static sites are also a perfect fit for content delivery networks (CDN) which enables great performance. 
 
-Static site generators usually accept a simple text format like markdown as input to generate pages. A simple input format eliminates most of the tool/framework lock-in and substantially increases the probability of your content being usable 10 or 20 years down the line. This is probably why note-taking software like [Obsidian](https://obsidian.md/) have become so popular. 
+Static site generators usually accept a simple text format like markdown as input to generate pages. A simple input format eliminates most of the tool/framework lock-in and substantially increases the probability of your content being usable 10 or 20 years down the line. This is probably why note-taking software like [Obsidian](https://obsidian.md/) has become so popular. 
+
+Writing your own generator seems like a good starter project since it has a well-defined outcome and lies in the Goldilocks zone in terms of size - big enough to expose you to most of the language features and not too big to overwhelm and take months to do. Plus it allows you to include only the site functionality you want and learn a bit about web development along the way. 
 
 ## The plan
 
@@ -74,6 +76,11 @@ Self-hosting your assets like fonts and icons [may improve performance](https://
 
 Modern font formats like WOFF2 take less space and nowadays have [good support](https://caniuse.com/woff2) making them an easy choice. Font size can be further improved via subsetting. [^font] Using a variable font keeps the codebase cleaner as you don't have to store separate files for italic, bold, regular etc. [Fontshare](https://www.fontshare.com/) is a good resource. 
  
+# End result
+
+Overall I'm glad I chose this as a starter project and I'm left quite impressed with the quality of Rust tooling and documentation. Performance isn't bad either - generating this site took 145ms on AMD Ryzen 5600x and Google PageSpeed seems happy too!
+
+![pagespeed.web.dev score](images/pagespeed.png)
 
 
 ### Footnotes

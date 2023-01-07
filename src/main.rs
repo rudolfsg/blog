@@ -16,7 +16,7 @@ mod rss;
 use post::Post;
 
 pub const BUILD_DIR: &str = "build";
-pub const MINIFY: bool = false;
+pub const MINIFY: bool = true;
 const BLOG_NAME: &str = "blog";
 const BLOG_URL: &str = "https://grobins.xyz"; 
 const CLEAN_BUILD: bool = true;

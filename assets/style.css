@@ -5,6 +5,7 @@
  :root {
      --text-color: #f8fafc;
      --bg-color: #301934;
+     /* --bg-color: #14101b, */
      --outline-color: rgba(250, 100, 50, 0.5);
      --link-color: #fa6432;
      --logo-color: red;
@@ -79,7 +80,10 @@
 
  .heading>a:hover,
  .heading>a:focus,
- .heading>a:active {
+ .heading>a:active,
+  .about>a:hover,
+  .about>a:focus,
+  .about>a:active {
      text-decoration: none;
  }
 

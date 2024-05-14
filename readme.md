@@ -2,7 +2,7 @@
 
 Simple, minimal static site generator for a blog written in Rust.
 
-Hosted at [grobins.xyz](https://grobins.xyz/)
+Hosted at [grobins.xyz](https://blog-8rp.pages.dev/)
 
 Features:
 * (almost) no javascript
